@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace EverFight
 {
@@ -10,6 +11,7 @@ namespace EverFight
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Texture2D spriteTexture;   // the image for our sprite
 
         public Game1()
         {
@@ -26,6 +28,7 @@ namespace EverFight
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            Vector2 rectInitialPos = new Vector2(200, 800);
 
             base.Initialize();
         }
@@ -40,6 +43,7 @@ namespace EverFight
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            spriteTexture = Content.Load<Texture2D>("rectSprite");
         }
 
         /// <summary>
@@ -59,6 +63,18 @@ namespace EverFight
         protected override void Update(GameTime gameTime)
         {
             // TODO: Add your update logic here
+            
+            // Allows the game to exit
+            if (Keyboard.GetState().IsKeyDown(Keys.Q))
+            {
+                this.Exit();
+            }
+
+            //move the rect (will be player one)
+            if (Keyboard.GetState().IsKeyDown(Keys.D))
+            {
+
+            }
 
             base.Update(gameTime);
         }
@@ -72,6 +88,11 @@ namespace EverFight
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            
+            // draw the rect (will be player 1)
+            spriteBatch.Begin();
+            spriteBatch.Draw(spriteTexture, rectInitialPos);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
