@@ -11,12 +11,18 @@ namespace EverFight
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Texture2D spriteTexture;   // the image for our sprite
+
+        //initialize Player 1
+        Player p1;
+        Player p2;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            p1 = new Player(1);
+            p2 = new Player(2);
         }
 
         /// <summary>
@@ -28,7 +34,6 @@ namespace EverFight
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            Vector2 rectInitialPos = new Vector2(200, 800);
 
             base.Initialize();
         }
@@ -43,7 +48,8 @@ namespace EverFight
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            spriteTexture = Content.Load<Texture2D>("rectSprite");
+            p1.LoadContent(Content);
+            p2.LoadContent(Content);
         }
 
         /// <summary>
@@ -70,11 +76,8 @@ namespace EverFight
                 this.Exit();
             }
 
-            //move the rect (will be player one)
-            if (Keyboard.GetState().IsKeyDown(Keys.D))
-            {
-
-            }
+            p1.Update();
+            p2.Update();
 
             base.Update(gameTime);
         }
@@ -88,11 +91,8 @@ namespace EverFight
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            
-            // draw the rect (will be player 1)
-            spriteBatch.Begin();
-            spriteBatch.Draw(spriteTexture, rectInitialPos);
-            spriteBatch.End();
+            p1.Draw(spriteBatch);
+            p2.Draw(spriteBatch);
 
             base.Draw(gameTime);
         }
