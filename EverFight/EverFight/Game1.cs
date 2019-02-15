@@ -21,8 +21,8 @@ namespace EverFight
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            p1 = new Player(1);
-            p2 = new Player(2);
+            p1 = new Player(1, GraphicsDevice);
+            p2 = new Player(2, GraphicsDevice);
         }
 
         /// <summary>
