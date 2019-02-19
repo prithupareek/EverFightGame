@@ -9,8 +9,9 @@ namespace EverFight
     /// </summary>
     public class Game1 : Game
     {
-        GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        //public int windowHeight;
+        //public int windowWidth;
 
         //initialize Player 1
         Player p1;
@@ -18,11 +19,15 @@ namespace EverFight
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
+
+            //fix this later
+            //windowHeight = this.GraphicsDevice.Viewport.Height;
+            //windowWidth = this.GraphicsDevice.Viewport.Width;
+
             Content.RootDirectory = "Content";
 
-            p1 = new Player(1, GraphicsDevice);
-            p2 = new Player(2, GraphicsDevice);
+            p1 = new Player(1);
+            p2 = new Player(2);
         }
 
         /// <summary>
@@ -34,6 +39,7 @@ namespace EverFight
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+
 
             base.Initialize();
         }

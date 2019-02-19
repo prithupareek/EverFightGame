@@ -15,7 +15,7 @@ using System.Diagnostics;
 
 namespace EverFight
 {
-    class Player
+    class Player : Game1
     {
 
         // Properties
@@ -23,17 +23,8 @@ namespace EverFight
         Vector2 position;  // the position for our sprite
         int playerNumber; //stores if p1 or p2
         
-
-        //store height and width of window (doesn't seem to be working)
-        int w;
-        int h;
-
         //Constructor
-        public Player(int num, GraphicsDevice gd) {
-
-            //fix this
-            w = gd.Viewport.Width;
-            h = gd.Viewport.Height;
+        public Player(int num) {
 
             playerNumber = num;
 
@@ -43,7 +34,7 @@ namespace EverFight
             }
             else if (playerNumber == 2)
             {
-                position = new Vector2(w-200, 1200); //initial player position
+                position = new Vector2(200, 1200); //initial player position
             }
         }
 
@@ -56,10 +47,7 @@ namespace EverFight
 
         //Update
         public void Update()
-        {
-            //for testing purposes only
-            Debug.WriteLine(w);
-            Debug.WriteLine(h);
+        { 
 
             KeyboardState keys = Keyboard.GetState();   // get current state of keyboard
 
