@@ -10,19 +10,16 @@ namespace EverFight
     public class Game1 : Game
     {
         SpriteBatch spriteBatch;
-        //public int windowHeight;
-        //public int windowWidth;
+        GraphicsDeviceManager graphics;
 
-        //initialize Player 1
+        ///initialize Player 1
         Player p1;
         Player p2;
 
         public Game1()
         {
 
-            //fix this later
-            //windowHeight = this.GraphicsDevice.Viewport.Height;
-            //windowWidth = this.GraphicsDevice.Viewport.Width;
+            graphics = new GraphicsDeviceManager(this);
 
             Content.RootDirectory = "Content";
 

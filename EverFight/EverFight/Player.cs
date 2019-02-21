@@ -15,18 +15,22 @@ using System.Diagnostics;
 
 namespace EverFight
 {
-    class Player : Game1
+    class Player
     {
 
         // Properties
         Texture2D spriteTexture;   // the image for our sprite
         Vector2 position;  // the position for our sprite
         int playerNumber; //stores if p1 or p2
-        
+        Boolean jumping;
+        int jumpSpeed;
+
         //Constructor
         public Player(int num) {
 
             playerNumber = num;
+            jumping = false;
+            jumpSpeed = 0;
 
             if (playerNumber == 1)
             {
@@ -34,7 +38,7 @@ namespace EverFight
             }
             else if (playerNumber == 2)
             {
-                position = new Vector2(200, 1200); //initial player position
+                position = new Vector2(1900, 1200); //initial player position
             }
         }
 
@@ -51,6 +55,8 @@ namespace EverFight
 
             KeyboardState keys = Keyboard.GetState();   // get current state of keyboard
 
+            position.Y += jumpSpeed;
+
             if (playerNumber == 1)
             {
                 if (keys.IsKeyDown(Keys.D)) //right
@@ -61,6 +67,12 @@ namespace EverFight
                 {
                     position = position + new Vector2(-1, 0);
                 }
+                if (keys.IsKeyDown(Keys.B) && jumping == false) //jump
+                {
+
+                    jumpSpeed = -5;
+                    jumping = true;
+                } 
             }
             else if (playerNumber == 2)
             {
@@ -72,6 +84,22 @@ namespace EverFight
                 {
                     position = position + new Vector2(-1, 0);
                 }
+                if (keys.IsKeyDown(Keys.L) && jumping == false) //jump
+                {
+                    position = position + new Vector2(0, -100);
+                    jumping = true;
+
+                }
+            }
+
+            if (position.Y <1200)
+            {
+                jumpSpeed = 5;
+            }
+            if (position.Y == 1200)
+            {
+                jumping = false;
+                jumpSpeed = 0;
             }
         }
 
