@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using System.Diagnostics;
+
 namespace EverFight
 {
     /// <summary>
@@ -16,15 +18,12 @@ namespace EverFight
         Player p1;
         Player p2;
 
+        Vector2 windowSize;
+
         public Game1()
         {
-
             graphics = new GraphicsDeviceManager(this);
-
             Content.RootDirectory = "Content";
-
-            p1 = new Player(1);
-            p2 = new Player(2);
         }
 
         /// <summary>
@@ -49,6 +48,14 @@ namespace EverFight
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            windowSize = new Vector2(graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height);
+
+            /// Debug.WriteLine(height);
+
+            // Constructors for Player class
+            p1 = new Player(1, windowSize);
+            p2 = new Player(2, windowSize);
 
             // TODO: use this.Content to load your game content here
             p1.LoadContent(Content);
@@ -91,7 +98,7 @@ namespace EverFight
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Azure);
 
             // TODO: Add your drawing code here
             p1.Draw(spriteBatch);

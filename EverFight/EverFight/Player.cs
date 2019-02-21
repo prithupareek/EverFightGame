@@ -26,7 +26,7 @@ namespace EverFight
         int jumpSpeed;
 
         //Constructor
-        public Player(int num) {
+        public Player(int num, Vector2 windowSize) {
 
             playerNumber = num;
             jumping = false;
@@ -34,11 +34,11 @@ namespace EverFight
 
             if (playerNumber == 1)
             {
-                position = new Vector2(200, 1200); //initial player position
+                position = new Vector2(windowSize.X+(windowSize.X*4), windowSize.Y - (windowSize.Y/4)); //initial player position
             }
             else if (playerNumber == 2)
             {
-                position = new Vector2(1900, 1200); //initial player position
+                position = new Vector2(windowSize.X - 100, windowSize.Y - 200); //initial player position
             }
         }
 
