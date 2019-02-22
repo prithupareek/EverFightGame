@@ -24,21 +24,23 @@ namespace EverFight
         int playerNumber; //stores if p1 or p2
         Boolean jumping;
         int jumpSpeed;
+        Vector2 windowSize; 
 
         //Constructor
-        public Player(int num, Vector2 windowSize) {
+        public Player(int num, Vector2 ws) {
 
             playerNumber = num;
+            windowSize = ws;
             jumping = false;
             jumpSpeed = 0;
 
             if (playerNumber == 1)
             {
-                position = new Vector2(windowSize.X+(windowSize.X*4), windowSize.Y - (windowSize.Y/4)); //initial player position
+                position = new Vector2((windowSize.X / 4) - 50, windowSize.Y - (windowSize.Y / 3)); //initial player position
             }
             else if (playerNumber == 2)
             {
-                position = new Vector2(windowSize.X - 100, windowSize.Y - 200); //initial player position
+                position = new Vector2(windowSize.X - (windowSize.X / 4), windowSize.Y - (windowSize.Y/3)); //initial player position
             }
         }
 
@@ -72,7 +74,12 @@ namespace EverFight
 
                     jumpSpeed = -5;
                     jumping = true;
-                } 
+                }
+                if (position.Y == windowSize.Y - (windowSize.Y / 3) && keys.IsKeyUp(Keys.B))
+                {
+                    jumping = false;
+                    jumpSpeed = 0;
+                }
             }
             else if (playerNumber == 2)
             {
@@ -86,21 +93,27 @@ namespace EverFight
                 }
                 if (keys.IsKeyDown(Keys.L) && jumping == false) //jump
                 {
-                    position = position + new Vector2(0, -100);
-                    jumping = true;
 
+                    jumpSpeed = -5;
+                    jumping = true;
+                }
+                if (position.Y == windowSize.Y - (windowSize.Y / 3) && keys.IsKeyUp(Keys.L))
+                {
+                    jumping = false;
+                    jumpSpeed = 0;
                 }
             }
 
-            if (position.Y <1200)
+            if (position.Y < windowSize.Y - (windowSize.Y / 2))
             {
                 jumpSpeed = 5;
             }
-            if (position.Y == 1200)
+            if (position.Y > windowSize.Y - (windowSize.Y / 3))
             {
+                position.Y = windowSize.Y - (windowSize.Y / 3);
                 jumping = false;
-                jumpSpeed = 0;
             }
+            
         }
 
         //Draw
