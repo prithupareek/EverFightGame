@@ -20,11 +20,11 @@ namespace EverFight
 
         // Properties
         Texture2D spriteTexture;   // the image for our sprite
-        Vector2 position;  // the position for our sprite
+        public Vector2 position;  // the position for our sprite
         int playerNumber; //stores if p1 or p2
         Boolean jumping;
         int jumpSpeed;
-        Vector2 windowSize; 
+        Vector2 windowSize;
 
         //Constructor
         public Player(int num, Vector2 ws) {
@@ -121,7 +121,9 @@ namespace EverFight
         {
 
             sb.Begin();
-            sb.Draw(spriteTexture, position);
+
+            //TODO: Ask Darby how to vary scale with screen size
+            sb.Draw(spriteTexture, position, null, Color.White, 0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0f);
             sb.End();
         }
     }

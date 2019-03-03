@@ -14,9 +14,13 @@ namespace EverFight
         SpriteBatch spriteBatch;
         GraphicsDeviceManager graphics;
 
-        ///initialize Player 1
+        ///initialize Players
         Player p1;
         Player p2;
+
+        //initialize weapon
+        Weapon p1Weapon;
+        Weapon p2Weapon;
 
         Vector2 windowSize;
 
@@ -57,9 +61,16 @@ namespace EverFight
             p1 = new Player(1, windowSize);
             p2 = new Player(2, windowSize);
 
+            // Constructors for the Weapon class
+            p1Weapon = new Weapon(p1.position, 1);
+            p2Weapon = new Weapon(p2.position, 2);
+
             // TODO: use this.Content to load your game content here
             p1.LoadContent(Content);
             p2.LoadContent(Content);
+
+            p1Weapon.LoadContent(Content);
+            p2Weapon.LoadContent(Content);
         }
 
         /// <summary>
@@ -89,6 +100,13 @@ namespace EverFight
             p1.Update();
             p2.Update();
 
+            p1Weapon.Update();
+            p2Weapon.Update();
+
+            //keep the positions in sync between the weapon and player
+            p1Weapon.position = p1.position;
+            p2Weapon.position = p2.position;
+
             base.Update(gameTime);
         }
 
@@ -103,6 +121,9 @@ namespace EverFight
             // TODO: Add your drawing code here
             p1.Draw(spriteBatch);
             p2.Draw(spriteBatch);
+
+            p1Weapon.Draw(spriteBatch);
+            p2Weapon.Draw(spriteBatch);
 
             base.Draw(gameTime);
         }
