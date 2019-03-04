@@ -72,7 +72,7 @@ namespace EverFight
                 if (keys.IsKeyDown(Keys.B) && jumping == false) //jump
                 {
 
-                    jumpSpeed = -5;
+                    jumpSpeed = -15;
                     jumping = true;
                 }
                 if (position.Y == windowSize.Y - (windowSize.Y / 3) && keys.IsKeyUp(Keys.B))
@@ -94,7 +94,7 @@ namespace EverFight
                 if (keys.IsKeyDown(Keys.L) && jumping == false) //jump
                 {
 
-                    jumpSpeed = -5;
+                    jumpSpeed = -15;
                     jumping = true;
                 }
                 if (position.Y == windowSize.Y - (windowSize.Y / 3) && keys.IsKeyUp(Keys.L))
@@ -106,7 +106,7 @@ namespace EverFight
 
             if (position.Y < windowSize.Y - (windowSize.Y / 2))
             {
-                jumpSpeed = 5;
+                jumpSpeed = 10;
             }
             if (position.Y > windowSize.Y - (windowSize.Y / 3))
             {
@@ -123,7 +123,8 @@ namespace EverFight
             sb.Begin();
 
             //TODO: Ask Darby how to vary scale with screen size
-            sb.Draw(spriteTexture, position, null, Color.White, 0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0f);
+            //sb.Draw(spriteTexture, position, null, Color.White, 0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0f); //used for smaller machine scale
+            sb.Draw(spriteTexture, position);
             sb.End();
         }
     }

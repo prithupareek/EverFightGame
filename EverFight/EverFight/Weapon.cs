@@ -24,36 +24,50 @@ namespace EverFight
         public Vector2 position; //the position for our sprite
         int playerNum; //stores if p1 or p2
         Vector2 windowSize; //not sure if needed
-        float rotation;
+        float rotation = 0f;
+        float rotationSpeed = 0f;
 
         //Constructor
         public Weapon(Vector2 pos, int player) {
 
             playerNum = player;
             position = pos;
-
-            if (playerNum == 1)
-            {
-                rotation = 0f;
-            }
-            else
-            {
-                rotation = 90f; //TODO: Figure out conversion to degrees
-            }
         }
 
         //Load Content
         public void LoadContent(ContentManager cm)
         {
             //load the image for the sprite
-            spriteTexture = cm.Load<Texture2D>("sword");
+            spriteTexture = cm.Load<Texture2D>("watergun");
         }
 
         //Update
         public void Update()
         {
+            KeyboardState keys = Keyboard.GetState();   // get current state of keyboard
 
+            //aim weapon
+            if (playerNum == 1)
+            {
+                if (keys.IsKeyDown(Keys.W))
+                {
+                    rotationSpeed = MathHelper.ToRadians(-1f);
+                }
+                if (keys.IsKeyDown(Keys.S))
+                {
+                    rotationSpeed = MathHelper.ToRadians(1f);
+                }
+                if (keys.IsKeyDown(Keys.W) && rotation == MathHelper.ToRadians(20))
+                {
+                    rotationSpeed = 0; //TODO: Work on this part...
+                }
+            }
+            else if (playerNum == 2)
+            {
 
+            }
+
+            rotation += rotationSpeed;
         }
 
         //Draw
@@ -63,7 +77,18 @@ namespace EverFight
             sb.Begin();
 
             //TODO: Ask Darby how to vary scale with screen size
-            sb.Draw(spriteTexture, position, null, Color.White, rotation, Vector2.Zero, 0.1f, SpriteEffects.None, 0f);
+            
+
+            if (playerNum == 1)
+            {
+                sb.Draw(spriteTexture, position, null, Color.White, rotation, Vector2.Zero, 0.3f, SpriteEffects.None, 0f);
+            }
+            else
+            {
+                sb.Draw(spriteTexture, position, null, Color.White, rotation, Vector2.Zero, 0.3f, SpriteEffects.FlipHorizontally, 0f);
+            }
+
+
             sb.End();
         }
 
