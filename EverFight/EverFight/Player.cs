@@ -54,6 +54,8 @@ namespace EverFight
         //Update
         public void Update()
         { 
+            
+            //TODO: Fix Gravity using yspeed stuff that darby was talking about
 
             KeyboardState keys = Keyboard.GetState();   // get current state of keyboard
 

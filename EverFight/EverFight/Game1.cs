@@ -104,8 +104,8 @@ namespace EverFight
             p2Weapon.Update();
 
             //keep the positions in sync between the weapon and player
-            p1Weapon.position = p1.position + new Vector2(0, 70);
-            p2Weapon.position = p2.position + new Vector2(-100, 70);
+            p1Weapon.position = p1.position + new Vector2(75, 150);
+            p2Weapon.position = p2.position + new Vector2(-25, 150);
 
             base.Update(gameTime);
         }

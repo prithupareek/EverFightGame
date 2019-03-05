@@ -24,7 +24,7 @@ namespace EverFight
         public Vector2 position; //the position for our sprite
         int playerNum; //stores if p1 or p2
         Vector2 windowSize; //not sure if needed
-        float rotation = 0f;
+        public float rotation = 0f;
         float rotationSpeed = 0f;
 
         //Constructor
@@ -57,13 +57,64 @@ namespace EverFight
                 {
                     rotationSpeed = MathHelper.ToRadians(1f);
                 }
-                if (keys.IsKeyDown(Keys.W) && rotation == MathHelper.ToRadians(20))
+                if (rotation <= MathHelper.ToRadians(-25))
                 {
-                    rotationSpeed = 0; //TODO: Work on this part...
+                    rotationSpeed = 0;
                 }
+                if (rotation >= MathHelper.ToRadians(25))
+                {
+                    rotationSpeed = 0;
+                }
+                if (keys.IsKeyUp(Keys.W) && keys.IsKeyUp(Keys.S))
+                {
+                    if (rotation > 0)
+                    {
+                        rotationSpeed = MathHelper.ToRadians(-1f);
+                    }
+                    if (rotation < 0)
+                    {
+                        rotationSpeed = MathHelper.ToRadians(1f);
+                    }
+                    if (rotation == 0)
+                    {
+                        rotationSpeed = 0;
+                    }
+                }
+
             }
             else if (playerNum == 2)
             {
+                if (keys.IsKeyDown(Keys.Up))
+                {
+                    rotationSpeed = MathHelper.ToRadians(-1f);
+                }
+                if (keys.IsKeyDown(Keys.Down))
+                {
+                    rotationSpeed = MathHelper.ToRadians(1f);
+                }
+                if (rotation <= MathHelper.ToRadians(-25))
+                {
+                    rotationSpeed = 0;
+                }
+                if (rotation >= MathHelper.ToRadians(25))
+                {
+                    rotationSpeed = 0;
+                }
+                if (keys.IsKeyUp(Keys.Up) && keys.IsKeyUp(Keys.Down))
+                {
+                    if (rotation > 0)
+                    {
+                        rotationSpeed = MathHelper.ToRadians(-1f);
+                    }
+                    if (rotation < 0)
+                    {
+                        rotationSpeed = MathHelper.ToRadians(1f);
+                    }
+                    if (rotation == 0)
+                    {
+                        rotationSpeed = 0;
+                    }
+                }
 
             }
 
@@ -81,11 +132,11 @@ namespace EverFight
 
             if (playerNum == 1)
             {
-                sb.Draw(spriteTexture, position, null, Color.White, rotation, Vector2.Zero, 0.3f, SpriteEffects.None, 0f);
+                sb.Draw(spriteTexture, position, null, Color.White, rotation, new Vector2(spriteTexture.Width / 2, spriteTexture.Height / 2), 0.3f, SpriteEffects.None, 0f);
             }
             else
             {
-                sb.Draw(spriteTexture, position, null, Color.White, rotation, Vector2.Zero, 0.3f, SpriteEffects.FlipHorizontally, 0f);
+                sb.Draw(spriteTexture, position, null, Color.White, rotation, new Vector2(spriteTexture.Width/2, spriteTexture.Height/2) , 0.3f, SpriteEffects.FlipHorizontally, 0f);
             }
 
 
