@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework.Input;
 
 using System.Diagnostics;
 
+using System.Collections.Generic;
+
 namespace EverFight
 {
     /// <summary>
@@ -23,6 +25,10 @@ namespace EverFight
         Weapon p2Weapon;
 
         Vector2 windowSize;
+
+        //arraylist to store bullets
+        List<Projectile> p1Projectiles;
+        List<Projectile> p2Projectiles;
 
         public Game1()
         {
@@ -65,6 +71,10 @@ namespace EverFight
             p1Weapon = new Weapon(p1.position, 1);
             p2Weapon = new Weapon(p2.position, 2);
 
+            // Constructors for the projectile arraylists
+            p1Projectiles = new List<Projectile>();
+            p2Projectiles = new List<Projectile>();
+
             // TODO: use this.Content to load your game content here
             p1.LoadContent(Content);
             p2.LoadContent(Content);
@@ -104,8 +114,18 @@ namespace EverFight
             p2Weapon.Update();
 
             //keep the positions in sync between the weapon and player
-            p1Weapon.position = p1.position + new Vector2(75, 150);
-            p2Weapon.position = p2.position + new Vector2(-25, 150);
+            p1Weapon.position = p1.position + new Vector2(50, 50);
+            p2Weapon.position = p2.position + new Vector2(-25, 50);
+
+            //on keypress for bullets
+            if (Keyboard.GetState().IsKeyDown(Keys.V))
+            {
+                p1Projectiles.Add(new Projectile(p1Weapon.position, 1, p1Weapon.rotation));
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.K))
+            {
+                p2Projectiles.Add(new Projectile(p2Weapon.position, 2, p2Weapon.rotation));
+            }
 
             base.Update(gameTime);
         }

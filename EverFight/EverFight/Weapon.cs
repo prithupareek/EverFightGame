@@ -132,11 +132,11 @@ namespace EverFight
 
             if (playerNum == 1)
             {
-                sb.Draw(spriteTexture, position, null, Color.White, rotation, new Vector2(spriteTexture.Width / 2, spriteTexture.Height / 2), 0.3f, SpriteEffects.None, 0f);
+                sb.Draw(spriteTexture, position, null, Color.White, rotation, new Vector2(spriteTexture.Width / 2, spriteTexture.Height / 2), 0.15f, SpriteEffects.None, 0f);
             }
             else
             {
-                sb.Draw(spriteTexture, position, null, Color.White, rotation, new Vector2(spriteTexture.Width/2, spriteTexture.Height/2) , 0.3f, SpriteEffects.FlipHorizontally, 0f);
+                sb.Draw(spriteTexture, position, null, Color.White, rotation, new Vector2(spriteTexture.Width/2, spriteTexture.Height/2) , 0.15f, SpriteEffects.FlipHorizontally, 0f);
             }
 
 

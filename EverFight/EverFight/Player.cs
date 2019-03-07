@@ -125,8 +125,8 @@ namespace EverFight
             sb.Begin();
 
             //TODO: Ask Darby how to vary scale with screen size
-            //sb.Draw(spriteTexture, position, null, Color.White, 0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0f); //used for smaller machine scale
-            sb.Draw(spriteTexture, position);
+            sb.Draw(spriteTexture, position, null, Color.White, 0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0f); //used for smaller machine scale
+            //sb.Draw(spriteTexture, position);
             sb.End();
         }
     }
