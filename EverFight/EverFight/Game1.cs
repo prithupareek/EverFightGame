@@ -81,6 +81,10 @@ namespace EverFight
 
             p1Weapon.LoadContent(Content);
             p2Weapon.LoadContent(Content);
+
+            ////load content for the projectiles
+            //foreach (Projectile projectile in p1Projectiles) projectile.LoadContent(Content);
+            //foreach (Projectile projectile in p2Projectiles) projectile.LoadContent(Content);
         }
 
         /// <summary>
@@ -120,12 +124,18 @@ namespace EverFight
             //on keypress for bullets
             if (Keyboard.GetState().IsKeyDown(Keys.V))
             {
-                p1Projectiles.Add(new Projectile(p1Weapon.position, 1, p1Weapon.rotation));
+                p1Projectiles.Add(new Projectile(p1Weapon.position, 1, p1Weapon.rotation, windowSize));
+                p1Projectiles[p1Projectiles.Count - 1].LoadContent(Content);
             }
             if (Keyboard.GetState().IsKeyDown(Keys.K))
             {
-                p2Projectiles.Add(new Projectile(p2Weapon.position, 2, p2Weapon.rotation));
+                p2Projectiles.Add(new Projectile(p2Weapon.position, 2, p2Weapon.rotation, windowSize));
+                p2Projectiles[p2Projectiles.Count - 1].LoadContent(Content);
             }
+
+            //update the bullets
+            foreach (Projectile projectile in p1Projectiles) projectile.Update();
+            foreach (Projectile projectile in p2Projectiles) projectile.Update();       
 
             base.Update(gameTime);
         }
@@ -144,6 +154,9 @@ namespace EverFight
 
             p1Weapon.Draw(spriteBatch);
             p2Weapon.Draw(spriteBatch);
+
+            foreach (Projectile projectile in p1Projectiles) projectile.Draw(spriteBatch);
+            foreach (Projectile projectile in p2Projectiles) projectile.Draw(spriteBatch);
 
             base.Draw(gameTime);
         }

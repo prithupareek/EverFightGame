@@ -86,11 +86,11 @@ namespace EverFight
             {
                 if (keys.IsKeyDown(Keys.Up))
                 {
-                    rotationSpeed = MathHelper.ToRadians(-1f);
+                    rotationSpeed = MathHelper.ToRadians(1f);
                 }
                 if (keys.IsKeyDown(Keys.Down))
                 {
-                    rotationSpeed = MathHelper.ToRadians(1f);
+                    rotationSpeed = MathHelper.ToRadians(-1f);
                 }
                 if (rotation <= MathHelper.ToRadians(-25))
                 {

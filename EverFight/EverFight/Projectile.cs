@@ -23,15 +23,25 @@ namespace EverFight
         int playerNum; //stores if p1 or p2
         float rotation;
         Vector2 velocity;
+        Vector2 windowSize;
 
         //Constructor
-        public Projectile(Vector2 pos, int player, float rot)
+        public Projectile(Vector2 pos, int player, float rot, Vector2 ws)
         {
             playerNum = player;
             position = pos;
             rotation = rot;
+            windowSize = ws;
 
-            velocity = new Vector2(5f, 0);
+            if (playerNum == 1)
+            {
+                velocity = new Vector2(5f, 2f);
+            }
+            if (playerNum == 2)
+            {
+                velocity = new Vector2(-5f, 2f);
+            }
+            
         }
 
         //LoadContent
@@ -44,7 +54,22 @@ namespace EverFight
         //Update
         public void Update()
         {
-           
+            position += velocity;
+
+            //gravity for y direction
+            //if the bullet hits the ground
+            if (position.Y >= windowSize.Y - (windowSize.Y / 3))
+            {
+                position.Y = windowSize.Y - (windowSize.Y / 3);
+                velocity.X = 0f;
+                velocity.Y = 0f;
+            }
+            //if the bullet is in the air
+            if (position.Y < windowSize.Y - (windowSize.Y /3))
+            {
+                //float i = 1;
+                //velocity.Y += 0.3f * i;
+            }
 
         }
 
@@ -52,11 +77,7 @@ namespace EverFight
         public void Draw(SpriteBatch sb)
         {
             sb.Begin();
-
-            //TODO: Ask Darby how to vary scale with screen size
-
-
-
+            sb.Draw(spriteTexture, position);
             sb.End();
         }
     }
