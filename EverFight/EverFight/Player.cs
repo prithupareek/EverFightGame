@@ -22,17 +22,16 @@ namespace EverFight
         Texture2D spriteTexture;   // the image for our sprite
         public Vector2 position;  // the position for our sprite
         int playerNumber; //stores if p1 or p2
-        Boolean jumping;
-        int jumpSpeed;
         Vector2 windowSize;
+        Vector2 velocity;
+        Boolean hasJumped;
 
         //Constructor
         public Player(int num, Vector2 ws) {
 
             playerNumber = num;
             windowSize = ws;
-            jumping = false;
-            jumpSpeed = 0;
+            hasJumped = true;
 
             if (playerNumber == 1)
             {
@@ -59,61 +58,59 @@ namespace EverFight
 
             KeyboardState keys = Keyboard.GetState();   // get current state of keyboard
 
-            position.Y += jumpSpeed;
+            position += velocity;
 
             if (playerNumber == 1)
             {
                 if (keys.IsKeyDown(Keys.D)) //right
                 {
-                    position = position + new Vector2(1, 0);
+                    position.X+= 3f;
                 }
                 if (keys.IsKeyDown(Keys.A)) //left
                 {
-                    position = position + new Vector2(-1, 0);
+                    position.X-= 3f;
                 }
-                if (keys.IsKeyDown(Keys.B) && jumping == false) //jump
+                if (keys.IsKeyDown(Keys.B) && hasJumped == false)
                 {
+                    position.Y -= 10f;
+                    velocity.Y = -5f;
+                    hasJumped = true;
+                }
 
-                    jumpSpeed = -15;
-                    jumping = true;
-                }
-                if (position.Y == windowSize.Y - (windowSize.Y / 3) && keys.IsKeyUp(Keys.B))
-                {
-                    jumping = false;
-                    jumpSpeed = 0;
-                }
+
             }
             else if (playerNumber == 2)
             {
                 if (keys.IsKeyDown(Keys.Right)) //right
                 {
-                    position = position + new Vector2(1, 0);
+                    position.X+= 3f;
                 }
                 if (keys.IsKeyDown(Keys.Left)) //left
                 {
-                    position = position + new Vector2(-1, 0);
+                    position.X-= 3f;
                 }
-                if (keys.IsKeyDown(Keys.L) && jumping == false) //jump
+                if (keys.IsKeyDown(Keys.L) && hasJumped == false)
                 {
-
-                    jumpSpeed = -15;
-                    jumping = true;
+                    position.Y -= 10f;
+                    velocity.Y = -5f;
+                    hasJumped = true;
                 }
-                if (position.Y == windowSize.Y - (windowSize.Y / 3) && keys.IsKeyUp(Keys.L))
-                {
-                    jumping = false;
-                    jumpSpeed = 0;
-                }
+                
             }
 
-            if (position.Y < windowSize.Y - (windowSize.Y / 2))
+            if (hasJumped == true)
             {
-                jumpSpeed = 10;
+                float i = 1;
+                velocity.Y += 0.3f * i;
             }
             if (position.Y > windowSize.Y - (windowSize.Y / 3))
             {
                 position.Y = windowSize.Y - (windowSize.Y / 3);
-                jumping = false;
+                hasJumped = false;
+            }
+            if (hasJumped == false)
+            {
+                velocity.Y = 0f;
             }
             
         }
