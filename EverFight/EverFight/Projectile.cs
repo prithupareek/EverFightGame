@@ -22,6 +22,7 @@ namespace EverFight
         public Vector2 position;  // the position for our sprite
         int playerNum; //stores if p1 or p2
         float rotation;
+        Vector2 velocity;
 
         //Constructor
         public Projectile(Vector2 pos, int player, float rot)
@@ -29,6 +30,8 @@ namespace EverFight
             playerNum = player;
             position = pos;
             rotation = rot;
+
+            velocity = new Vector2(5f, 0);
         }
 
         //LoadContent
