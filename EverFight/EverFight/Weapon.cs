@@ -125,11 +125,9 @@ namespace EverFight
         public void Draw(SpriteBatch sb)
         {
 
-            sb.Begin();
+            sb.Begin();            
 
-            //TODO: Ask Darby how to vary scale with screen size
-            
-
+            //used to draw the sprite flipped for players
             if (playerNum == 1)
             {
                 sb.Draw(spriteTexture, position, null, Color.White, rotation, new Vector2(spriteTexture.Width / 2, spriteTexture.Height / 2), 0.15f, SpriteEffects.None, 0f);

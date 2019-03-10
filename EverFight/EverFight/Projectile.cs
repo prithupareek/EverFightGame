@@ -24,32 +24,33 @@ namespace EverFight
         float rotation;
         Vector2 velocity;
         Vector2 windowSize;
+        Texture2D playerSpriteTexture; //used to get the dimensions of texture
+        Vector2 launchPos;
 
         //Constructor
-        public Projectile(Vector2 pos, int player, float rot, Vector2 ws)
+        public Projectile(Vector2 pos, int player, float rot, Vector2 ws, Texture2D bt, Texture2D pt)
         {
             playerNum = player;
             position = pos;
             rotation = rot;
             windowSize = ws;
+            spriteTexture = bt;
+            playerSpriteTexture = pt;
+            launchPos = pos;
+
 
             if (playerNum == 1)
             {
-                velocity = new Vector2(5f, 2f);
+                velocity = new Vector2(20*(float)Math.Cos(rotation), 20*(float)Math.Sin(rotation));
             }
             if (playerNum == 2)
             {
-                velocity = new Vector2(-5f, 2f);
+                velocity = new Vector2(-20 * (float)Math.Cos(rotation), -20 * (float)Math.Sin(rotation));
             }
             
         }
 
-        //LoadContent
-        public void LoadContent(ContentManager cm)
-        {
-            //load the image for the sprite
-            spriteTexture = cm.Load<Texture2D>("projectile");
-        }
+        //Content is loaded in Game1 Class
 
         //Update
         public void Update()
@@ -57,19 +58,13 @@ namespace EverFight
             position += velocity;
 
             //gravity for y direction
-            //if the bullet hits the ground
-            if (position.Y >= windowSize.Y - (windowSize.Y / 3))
+            if (position.Y < windowSize.Y - (windowSize.Y /3) + playerSpriteTexture.Height)
             {
-                position.Y = windowSize.Y - (windowSize.Y / 3);
-                velocity.X = 0f;
-                velocity.Y = 0f;
+                float i = 1;
+                velocity.Y += 0.3f * i;
             }
-            //if the bullet is in the air
-            if (position.Y < windowSize.Y - (windowSize.Y /3))
-            {
-                //float i = 1;
-                //velocity.Y += 0.3f * i;
-            }
+            //have the bullet rotate as a projectile
+            rotation = (float)Math.Atan2(velocity.Y, velocity.X); 
 
         }
 
@@ -77,7 +72,7 @@ namespace EverFight
         public void Draw(SpriteBatch sb)
         {
             sb.Begin();
-            sb.Draw(spriteTexture, position);
+            sb.Draw(spriteTexture, position, null, Color.Black, rotation, new Vector2(spriteTexture.Width / 2, spriteTexture.Height / 2), 0.1f, SpriteEffects.None, 0f);
             sb.End();
         }
     }

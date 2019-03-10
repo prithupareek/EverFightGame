@@ -30,6 +30,12 @@ namespace EverFight
         List<Projectile> p1Projectiles;
         List<Projectile> p2Projectiles;
 
+        //bullets texture.. don't know if there is a better way to do this
+        Texture2D bulletTexture;
+
+        //pastkey for bullets firing
+        KeyboardState pastKey;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -82,9 +88,8 @@ namespace EverFight
             p1Weapon.LoadContent(Content);
             p2Weapon.LoadContent(Content);
 
-            ////load content for the projectiles
-            //foreach (Projectile projectile in p1Projectiles) projectile.LoadContent(Content);
-            //foreach (Projectile projectile in p2Projectiles) projectile.LoadContent(Content);
+            //load content for the projectiles
+            bulletTexture = Content.Load<Texture2D>("projectile");
         }
 
         /// <summary>
@@ -122,15 +127,25 @@ namespace EverFight
             p2Weapon.position = p2.position + new Vector2(-25, 50);
 
             //on keypress for bullets
-            if (Keyboard.GetState().IsKeyDown(Keys.V))
+            if (Keyboard.GetState().IsKeyDown(Keys.V) && pastKey.IsKeyUp(Keys.V))
             {
-                p1Projectiles.Add(new Projectile(p1Weapon.position, 1, p1Weapon.rotation, windowSize));
-                p1Projectiles[p1Projectiles.Count - 1].LoadContent(Content);
+
+                p1Projectiles.Add(new Projectile(p1Weapon.position, 1, p1Weapon.rotation, windowSize, bulletTexture, p1.spriteTexture));
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.K))
+            if (Keyboard.GetState().IsKeyDown(Keys.K) && pastKey.IsKeyUp(Keys.K))
+            { 
+                p2Projectiles.Add(new Projectile(p2Weapon.position, 2, p2Weapon.rotation, windowSize, bulletTexture, p2.spriteTexture));
+            }
+
+            pastKey = Keyboard.GetState();
+
+            //delete the bullets if they hit the ground
+            for (int i=0; i<p1Projectiles.Count; i++)
             {
-                p2Projectiles.Add(new Projectile(p2Weapon.position, 2, p2Weapon.rotation, windowSize));
-                p2Projectiles[p2Projectiles.Count - 1].LoadContent(Content);
+                if (p1Projectiles[i].position.Y >= windowSize.Y - (windowSize.Y / 3) + p1.spriteTexture.Height*0.5 - bulletTexture.Height*0.1)
+                {
+                    p1Projectiles.RemoveAt(i);
+                }
             }
 
             //update the bullets

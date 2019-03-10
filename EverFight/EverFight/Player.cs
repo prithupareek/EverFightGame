@@ -19,7 +19,7 @@ namespace EverFight
     {
 
         // Properties
-        Texture2D spriteTexture;   // the image for our sprite
+        public Texture2D spriteTexture;   // the image for our sprite
         public Vector2 position;  // the position for our sprite
         int playerNumber; //stores if p1 or p2
         Vector2 windowSize;
@@ -54,11 +54,9 @@ namespace EverFight
         public void Update()
         { 
             
-            //TODO: Fix Gravity using yspeed stuff that darby was talking about
-
             KeyboardState keys = Keyboard.GetState();   // get current state of keyboard
 
-            position += velocity;
+            position += velocity;   //used mostly for gravity
 
             if (playerNumber == 1)
             {
@@ -70,7 +68,7 @@ namespace EverFight
                 {
                     position.X-= 3f;
                 }
-                if (keys.IsKeyDown(Keys.B) && hasJumped == false)
+                if (keys.IsKeyDown(Keys.B) && hasJumped == false)   //jump
                 {
                     position.Y -= 10f;
                     velocity.Y = -5f;
@@ -89,7 +87,7 @@ namespace EverFight
                 {
                     position.X-= 3f;
                 }
-                if (keys.IsKeyDown(Keys.L) && hasJumped == false)
+                if (keys.IsKeyDown(Keys.L) && hasJumped == false)   //jump
                 {
                     position.Y -= 10f;
                     velocity.Y = -5f;
@@ -98,6 +96,7 @@ namespace EverFight
                 
             }
 
+            //jumping stuff
             if (hasJumped == true)
             {
                 float i = 1;
@@ -120,10 +119,7 @@ namespace EverFight
         {
 
             sb.Begin();
-
-            //TODO: Ask Darby how to vary scale with screen size
             sb.Draw(spriteTexture, position, null, Color.White, 0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0f); //used for smaller machine scale
-            //sb.Draw(spriteTexture, position);
             sb.End();
         }
     }
