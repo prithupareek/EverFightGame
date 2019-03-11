@@ -150,7 +150,13 @@ namespace EverFight
 
             //update the bullets
             foreach (Projectile projectile in p1Projectiles) projectile.Update();
-            foreach (Projectile projectile in p2Projectiles) projectile.Update();       
+            foreach (Projectile projectile in p2Projectiles) projectile.Update();
+            
+            //projectile - player collision detection
+            foreach (Projectile projectile in p1Projectiles)
+            {
+                //TODO: Bounding Box Collision Detection
+            }
 
             base.Update(gameTime);
         }
