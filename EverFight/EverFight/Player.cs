@@ -25,6 +25,7 @@ namespace EverFight
         Vector2 windowSize;
         Vector2 velocity;
         Boolean hasJumped;
+        public BoundingBox boundingBox;
 
         //Constructor
         public Player(int num, Vector2 ws) {
@@ -57,6 +58,8 @@ namespace EverFight
             KeyboardState keys = Keyboard.GetState();   // get current state of keyboard
 
             position += velocity;   //used mostly for gravity
+
+            boundingBox = new BoundingBox(new Vector3(position, 0), new Vector3(position.X + (spriteTexture.Width), position.Y + (spriteTexture.Height), 0));
 
             if (playerNumber == 1)
             {
@@ -112,6 +115,14 @@ namespace EverFight
                 velocity.Y = 0f;
             }
             
+        }
+
+        //respawn function
+        public void Respawn(GameTime gt)
+        {
+
+           //TODO: Write Respawn Code after Delay
+
         }
 
         //Draw

@@ -26,6 +26,7 @@ namespace EverFight
         Vector2 windowSize;
         Texture2D playerSpriteTexture; //used to get the dimensions of texture
         Vector2 launchPos;
+        public BoundingBox boundingBox;
 
         //Constructor
         public Projectile(Vector2 pos, int player, float rot, Vector2 ws, Texture2D bt, Texture2D pt)
@@ -56,6 +57,8 @@ namespace EverFight
         public void Update()
         {
             position += velocity;
+
+            boundingBox = new BoundingBox(new Vector3(position, 0), new Vector3(position.X + (spriteTexture.Width), position.Y + (spriteTexture.Height), 0));
 
             //gravity for y direction
             if (position.Y < windowSize.Y - (windowSize.Y /3) + playerSpriteTexture.Height)

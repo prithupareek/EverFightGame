@@ -36,8 +36,6 @@ namespace EverFight
         //pastkey for bullets firing
         KeyboardState pastKey;
 
-        //Bounding boxes for player
-        BoundingBox p1BoundingBox, p2BoundingBox, windowBoundingBox;
 
         public Game1()
         {
@@ -94,8 +92,6 @@ namespace EverFight
             //load content for the projectiles
             bulletTexture = Content.Load<Texture2D>("projectile");
 
-            //window bounding box
-            windowBoundingBox = new BoundingBox(new Vector3(0, 0, 0), new Vector3(windowSize, 0));
         }
 
         /// <summary>
@@ -158,21 +154,22 @@ namespace EverFight
             foreach (Projectile projectile in p1Projectiles) projectile.Update();
             foreach (Projectile projectile in p2Projectiles) projectile.Update();
 
-            //update the bounding boxes
-            p1BoundingBox = new BoundingBox(new Vector3(p1.position, 0), new Vector3(p1.position.X + (p1.spriteTexture.Width), p1.position.Y + (p1.spriteTexture.Height), 0));
-            p1BoundingBox = new BoundingBox(new Vector3(p2.position, 0), new Vector3(p2.position.X + (p2.spriteTexture.Width), p2.position.Y + (p2.spriteTexture.Height), 0));
-
-            //Debugging code
-            if (p1BoundingBox.Contains(windowBoundingBox) == true)
-            {
-                Window.Title = "Test";
-            }
 
 
             //projectile - player collision detection
             foreach (Projectile projectile in p1Projectiles)
             {
-                //TODO: Bounding Box Collision Detection
+                if (projectile.boundingBox.Intersects(p2.boundingBox))
+                {
+                    p2.Respawn(gameTime);
+                }
+            }
+            foreach (Projectile projectile in p2Projectiles)
+            {
+                if (projectile.boundingBox.Intersects(p1.boundingBox))
+                {
+                    Debug.WriteLine("Test");
+                }
             }
 
             base.Update(gameTime);
