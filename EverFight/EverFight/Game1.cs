@@ -172,14 +172,14 @@ namespace EverFight
             //delete the bullets if they hit the ground
             for (int i=0; i<p1Projectiles.Count; i++)
             {
-                if (p1Projectiles[i].position.Y >= windowSize.Y - (windowSize.Y / 3) + p1.spriteTexture.Height - bulletTexture.Height*0.1)
+                if (p1Projectiles[i].position.Y >= windowSize.Y - bulletTexture.Height*0.1)
                 {
                     p1Projectiles.RemoveAt(i);
                 }
             }
             for (int i = 0; i < p2Projectiles.Count; i++)
             {
-                if (p2Projectiles[i].position.Y >= windowSize.Y - (windowSize.Y / 3) + p1.spriteTexture.Height - bulletTexture.Height * 0.1)
+                if (p2Projectiles[i].position.Y >= windowSize.Y - bulletTexture.Height * 0.1)
                 {
                     p2Projectiles.RemoveAt(i);
                 }

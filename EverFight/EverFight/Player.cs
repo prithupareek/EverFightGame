@@ -74,7 +74,7 @@ namespace EverFight
                 if (keys.IsKeyDown(Keys.B) && hasJumped == false)   //jump
                 {
                     position.Y -= 10f;
-                    velocity.Y = -5f;
+                    velocity.Y = -10f;
                     hasJumped = true;
                 }
 
@@ -105,9 +105,9 @@ namespace EverFight
                 float i = 1;
                 velocity.Y += 0.3f * i;
             }
-            if (position.Y > windowSize.Y - (windowSize.Y / 3))
+            if (position.Y > windowSize.Y - spriteTexture.Height)
             {
-                position.Y = windowSize.Y - (windowSize.Y / 3);
+                position.Y = windowSize.Y - spriteTexture.Height;
                 hasJumped = false;
             }
             if (hasJumped == false)

@@ -61,7 +61,7 @@ namespace EverFight
             boundingBox = new BoundingBox(new Vector3(position, 0), new Vector3(position.X + (spriteTexture.Width*0.1f), position.Y + (spriteTexture.Height*0.1f), 0));
 
             //gravity for y direction
-            if (position.Y < windowSize.Y - (windowSize.Y /3) + playerSpriteTexture.Height)
+            if (position.Y < windowSize.Y)
             {
                 float i = 1;
                 velocity.Y += 0.3f * i;
