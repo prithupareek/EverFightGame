@@ -26,6 +26,8 @@ namespace EverFight
         public Vector2 velocity;
         public Boolean hasJumped;
         public BoundingBox boundingBox;
+        public Boolean hasDied;
+        public Boolean hasWon;
 
         //Constructor
         public Player(int num, Vector2 ws) {
@@ -33,6 +35,7 @@ namespace EverFight
             playerNumber = num;
             windowSize = ws;
             hasJumped = true;
+            hasDied = false;
 
             if (playerNumber == 1)
             {

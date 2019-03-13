@@ -201,6 +201,7 @@ namespace EverFight
                     p2.position = new Vector2(windowSize.X - (windowSize.X / 4), -200);
                     p2Weapon.position = p2.position + new Vector2(-25, 50);
                     p2Weapon.movingRight = false;
+                    p2.hasDied = true;
 
                     break;
                 }
@@ -214,6 +215,7 @@ namespace EverFight
                     p1.position = new Vector2((windowSize.X / 4) - 50, -200);
                     p1Weapon.position = p1.position + new Vector2(50, 50);
                     p1Weapon.movingRight = true;
+                    p1.hasDied = true;
 
                     break;
                 }
@@ -229,6 +231,26 @@ namespace EverFight
             {
                 p1.velocity.Y = 5;
                 p1.hasJumped = true;
+            }
+
+            //player reaches endzone
+            if (p1.position.X>= windowSize.X && p2.hasDied)
+            {
+                p1.hasWon = true;
+            }
+            if (p2.position.X <= 0 && p1.hasDied)
+            {
+                p2.hasWon = true;
+            }
+
+            //Game Over Scenario
+            if (p1.hasWon)
+            {
+                Debug.WriteLine("Player 1 Wins!!!");
+            }
+            else if (p2.hasWon)
+            {
+                Debug.WriteLine("Player 2 Wins!!!");
             }
 
             base.Update(gameTime);
