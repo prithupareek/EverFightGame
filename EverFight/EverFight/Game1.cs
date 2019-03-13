@@ -36,6 +36,9 @@ namespace EverFight
         //pastkey for bullets firing
         KeyboardState pastKey;
 
+        Delay respawnDelay1;
+        Delay respawnDelay2;
+
 
         public Game1()
         {
@@ -92,6 +95,10 @@ namespace EverFight
             //load content for the projectiles
             bulletTexture = Content.Load<Texture2D>("projectile");
 
+            //respawn delay
+            respawnDelay1 = new Delay(3f);
+            respawnDelay2 = new Delay(3f);
+
         }
 
         /// <summary>
@@ -124,19 +131,40 @@ namespace EverFight
             p1Weapon.Update();
             p2Weapon.Update();
 
-            //keep the positions in sync between the weapon and player
-            p1Weapon.position = p1.position + new Vector2(50, 50);
-            p2Weapon.position = p2.position + new Vector2(-25, 50);
+            //movement of weapon
+            if (Keyboard.GetState().IsKeyDown(Keys.A))
+            {
+                p1Weapon.movingRight = false;
+                p1Weapon.position.X = p1.position.X - 25;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.D))
+            {
+                p1Weapon.position.X = p1.position.X + 50;
+                p1Weapon.movingRight = true;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.Left))
+            {
+                p2Weapon.movingRight = false;
+                p2Weapon.position.X = p2.position.X - 25;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            {
+                p2Weapon.position.X = p2.position.X + 50;
+                p2Weapon.movingRight = true;
+            }
+
+            p1Weapon.position.Y = p1.position.Y + 50;
+            p2Weapon.position.Y = p2.position.Y + 50;
 
             //on keypress for bullets
-            if (Keyboard.GetState().IsKeyDown(Keys.V) && pastKey.IsKeyUp(Keys.V))
+            if (Keyboard.GetState().IsKeyDown(Keys.V) && pastKey.IsKeyUp(Keys.V))   //p1
             {
 
-                p1Projectiles.Add(new Projectile(p1Weapon.position, 1, p1Weapon.rotation, windowSize, bulletTexture, p1.spriteTexture));
+                p1Projectiles.Add(new Projectile(p1Weapon.position, 1, p1Weapon.rotation, windowSize, bulletTexture, p1.spriteTexture, p1Weapon.movingRight));
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.K) && pastKey.IsKeyUp(Keys.K))
+            if (Keyboard.GetState().IsKeyDown(Keys.K) && pastKey.IsKeyUp(Keys.K))   //p2
             { 
-                p2Projectiles.Add(new Projectile(p2Weapon.position, 2, p2Weapon.rotation, windowSize, bulletTexture, p2.spriteTexture));
+                p2Projectiles.Add(new Projectile(p2Weapon.position, 2, p2Weapon.rotation, windowSize, bulletTexture, p2.spriteTexture, p2Weapon.movingRight));
             }
 
             pastKey = Keyboard.GetState();
@@ -144,9 +172,16 @@ namespace EverFight
             //delete the bullets if they hit the ground
             for (int i=0; i<p1Projectiles.Count; i++)
             {
-                if (p1Projectiles[i].position.Y >= windowSize.Y - (windowSize.Y / 3) + p1.spriteTexture.Height*0.5 - bulletTexture.Height*0.1)
+                if (p1Projectiles[i].position.Y >= windowSize.Y - (windowSize.Y / 3) + p1.spriteTexture.Height - bulletTexture.Height*0.1)
                 {
                     p1Projectiles.RemoveAt(i);
+                }
+            }
+            for (int i = 0; i < p2Projectiles.Count; i++)
+            {
+                if (p2Projectiles[i].position.Y >= windowSize.Y - (windowSize.Y / 3) + p1.spriteTexture.Height - bulletTexture.Height * 0.1)
+                {
+                    p2Projectiles.RemoveAt(i);
                 }
             }
 
@@ -161,15 +196,39 @@ namespace EverFight
             {
                 if (projectile.boundingBox.Intersects(p2.boundingBox))
                 {
-                    p2.Respawn(gameTime);
+                    p1Projectiles.Remove(projectile);
+
+                    p2.position = new Vector2(windowSize.X - (windowSize.X / 4), -200);
+                    p2Weapon.position = p2.position + new Vector2(-25, 50);
+                    p2Weapon.movingRight = false;
+
+                    break;
                 }
             }
             foreach (Projectile projectile in p2Projectiles)
             {
                 if (projectile.boundingBox.Intersects(p1.boundingBox))
                 {
-                    Debug.WriteLine("Test");
+                    p2Projectiles.Remove(projectile);
+
+                    p1.position = new Vector2((windowSize.X / 4) - 50, -200);
+                    p1Weapon.position = p1.position + new Vector2(50, 50);
+                    p1Weapon.movingRight = true;
+
+                    break;
                 }
+            }
+
+            //respawn timer
+            if (p2.position.Y < 0 && respawnDelay1.timerDone(gameTime))
+            {
+                p2.velocity.Y = 5;
+                p2.hasJumped = true;
+            }
+            if (p1.position.Y < 0 && respawnDelay2.timerDone(gameTime))
+            {
+                p1.velocity.Y = 5;
+                p1.hasJumped = true;
             }
 
             base.Update(gameTime);

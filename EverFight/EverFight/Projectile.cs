@@ -29,7 +29,7 @@ namespace EverFight
         public BoundingBox boundingBox;
 
         //Constructor
-        public Projectile(Vector2 pos, int player, float rot, Vector2 ws, Texture2D bt, Texture2D pt)
+        public Projectile(Vector2 pos, int player, float rot, Vector2 ws, Texture2D bt, Texture2D pt, Boolean movingRight)
         {
             playerNum = player;
             position = pos;
@@ -40,11 +40,11 @@ namespace EverFight
             launchPos = pos;
 
 
-            if (playerNum == 1)
+            if (movingRight)
             {
                 velocity = new Vector2(20*(float)Math.Cos(rotation), 20*(float)Math.Sin(rotation));
             }
-            if (playerNum == 2)
+            if (!movingRight)
             {
                 velocity = new Vector2(-20 * (float)Math.Cos(rotation), -20 * (float)Math.Sin(rotation));
             }
@@ -58,7 +58,7 @@ namespace EverFight
         {
             position += velocity;
 
-            boundingBox = new BoundingBox(new Vector3(position, 0), new Vector3(position.X + (spriteTexture.Width), position.Y + (spriteTexture.Height), 0));
+            boundingBox = new BoundingBox(new Vector3(position, 0), new Vector3(position.X + (spriteTexture.Width*0.1f), position.Y + (spriteTexture.Height*0.1f), 0));
 
             //gravity for y direction
             if (position.Y < windowSize.Y - (windowSize.Y /3) + playerSpriteTexture.Height)

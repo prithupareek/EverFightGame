@@ -23,8 +23,8 @@ namespace EverFight
         public Vector2 position;  // the position for our sprite
         int playerNumber; //stores if p1 or p2
         Vector2 windowSize;
-        Vector2 velocity;
-        Boolean hasJumped;
+        public Vector2 velocity;
+        public Boolean hasJumped;
         public BoundingBox boundingBox;
 
         //Constructor
@@ -117,20 +117,12 @@ namespace EverFight
             
         }
 
-        //respawn function
-        public void Respawn(GameTime gt)
-        {
-
-           //TODO: Write Respawn Code after Delay
-
-        }
-
         //Draw
         public void Draw(SpriteBatch sb)
         {
 
             sb.Begin();
-            sb.Draw(spriteTexture, position, null, Color.White, 0f, Vector2.Zero, 0.5f, SpriteEffects.None, 0f); //used for smaller machine scale
+            sb.Draw(spriteTexture, position, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f); //used for smaller machine scale
             sb.End();
         }
     }

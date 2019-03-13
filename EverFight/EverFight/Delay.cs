@@ -14,7 +14,7 @@ namespace EverFight
         TimeSpan previousCallTime;
 
         //Constructor
-        Delay(float rate)
+        public Delay(float rate)
         {
             delayRate = TimeSpan.FromSeconds(rate);
             previousCallTime = TimeSpan.FromSeconds(0f);
