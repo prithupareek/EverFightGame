@@ -20,10 +20,6 @@ namespace EverFight
         Player p1;
         Player p2;
 
-        //initialize weapon
-        Weapon p1Weapon;
-        Weapon p2Weapon;
-
         Vector2 windowSize;
 
         //arraylist to store bullets
@@ -79,10 +75,6 @@ namespace EverFight
             p1 = new Player(1, windowSize);
             p2 = new Player(2, windowSize);
 
-            // Constructors for the Weapon class
-            p1Weapon = new Weapon(p1.position, 1);
-            p2Weapon = new Weapon(p2.position, 2);
-
             // Constructors for the projectile arraylists
             p1Projectiles = new List<Projectile>();
             p2Projectiles = new List<Projectile>();
@@ -90,9 +82,6 @@ namespace EverFight
             // TODO: use this.Content to load your game content here
             p1.LoadContent(Content);
             p2.LoadContent(Content);
-
-            p1Weapon.LoadContent(Content);
-            p2Weapon.LoadContent(Content);
 
             //load content for the projectiles
             bulletTexture = Content.Load<Texture2D>("projectile");
@@ -133,43 +122,15 @@ namespace EverFight
             p1.Update();
             p2.Update();
 
-            p1Weapon.Update();
-            p2Weapon.Update();
-
-            //movement of weapon
-            if (Keyboard.GetState().IsKeyDown(Keys.A))
-            {
-                p1Weapon.movingRight = false;
-                p1Weapon.position.X = p1.position.X - 25;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.D))
-            {
-                p1Weapon.position.X = p1.position.X + 50;
-                p1Weapon.movingRight = true;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.Left))
-            {
-                p2Weapon.movingRight = false;
-                p2Weapon.position.X = p2.position.X - 25;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.Right))
-            {
-                p2Weapon.position.X = p2.position.X + 50;
-                p2Weapon.movingRight = true;
-            }
-
-            p1Weapon.position.Y = p1.position.Y + 50;
-            p2Weapon.position.Y = p2.position.Y + 50;
-
             //on keypress for bullets
             if (Keyboard.GetState().IsKeyDown(Keys.V) && pastKey.IsKeyUp(Keys.V))   //p1
             {
 
-                p1Projectiles.Add(new Projectile(p1Weapon.position, 1, p1Weapon.rotation, windowSize, bulletTexture, p1.spriteTexture, p1Weapon.movingRight));
+                p1Projectiles.Add(new Projectile(p1.weapon.position, 1, p1.weapon.rotation, windowSize, bulletTexture, p1.spriteTexture, p1.weapon.movingRight));
             }
             if (Keyboard.GetState().IsKeyDown(Keys.K) && pastKey.IsKeyUp(Keys.K))   //p2
             { 
-                p2Projectiles.Add(new Projectile(p2Weapon.position, 2, p2Weapon.rotation, windowSize, bulletTexture, p2.spriteTexture, p2Weapon.movingRight));
+                p2Projectiles.Add(new Projectile(p2.weapon.position, 2, p2.weapon.rotation, windowSize, bulletTexture, p2.spriteTexture, p2.weapon.movingRight));
             }
 
             pastKey = Keyboard.GetState();
@@ -203,13 +164,9 @@ namespace EverFight
                 {
                     p1Projectiles.Remove(projectile);
 
-                    p2.respawn = true;
-
-                    p2.position = new Vector2(windowSize.X - (windowSize.X / 4), -200);
-                    p2Weapon.position = p2.position + new Vector2(-25, 50);
-                    p2Weapon.movingRight = false;
-                    p2.hasDied = true;
+                    p2.Respawn();
                     p1.hasDied = false;
+
 
                     break;
                 }
@@ -220,19 +177,15 @@ namespace EverFight
                 {
                     p2Projectiles.Remove(projectile);
 
-                    p1.respawn = true;
 
-                    p1.position = new Vector2((windowSize.X / 4) - 50, -200);
-                    p1Weapon.position = p1.position + new Vector2(50, 50);
-                    p1Weapon.movingRight = true;
-                    p1.hasDied = true;
+                    p1.Respawn();
+
                     p2.hasDied = false;
 
                     break;
                 }
             }
 
-            //respawn code 
 
             //respawn timer
             if (p2.position.Y < 0 && respawnDelay1.timerDone(gameTime))
@@ -252,7 +205,7 @@ namespace EverFight
                 if (p2.hasDied)
                 {
                     p1.position.X = 0;
-                    
+                    p2.Respawn();
                 }
                 else
                 {
@@ -264,6 +217,7 @@ namespace EverFight
                 if (p1.hasDied)
                 {
                     p2.position.X = windowSize.X - p2.spriteTexture.Width;
+                    p1.Respawn();
                 }
                 else
                 {
@@ -285,9 +239,6 @@ namespace EverFight
             // TODO: Add your drawing code here
             p1.Draw(spriteBatch);
             p2.Draw(spriteBatch);
-
-            p1Weapon.Draw(spriteBatch);
-            p2Weapon.Draw(spriteBatch);
 
             foreach (Projectile projectile in p1Projectiles) projectile.Draw(spriteBatch);
             foreach (Projectile projectile in p2Projectiles) projectile.Draw(spriteBatch);

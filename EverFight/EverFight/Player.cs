@@ -28,7 +28,7 @@ namespace EverFight
         public BoundingBox boundingBox;
         public Boolean hasDied;
         public Boolean hasWon;
-        public Boolean respawn;
+        public Weapon weapon;
 
         //Constructor
         public Player(int num, Vector2 ws) {
@@ -37,6 +37,7 @@ namespace EverFight
             windowSize = ws;
             hasJumped = true;
             hasDied = false;
+            
 
             if (playerNumber == 1)
             {
@@ -46,6 +47,8 @@ namespace EverFight
             {
                 position = new Vector2(windowSize.X - (windowSize.X / 4), windowSize.Y - (windowSize.Y/3)); //initial player position
             }
+
+            weapon = new Weapon(position, playerNumber);
         }
 
         //Load Content
@@ -53,11 +56,14 @@ namespace EverFight
         {
             //load the image for the sprite
             spriteTexture = cm.Load<Texture2D>("rectSprite");
+
+            weapon.LoadContent(cm);
         }
 
         //Update
         public void Update()
-        { 
+        {
+            weapon.Update();
             
             KeyboardState keys = Keyboard.GetState();   // get current state of keyboard
 
@@ -69,10 +75,14 @@ namespace EverFight
             {
                 if (keys.IsKeyDown(Keys.D)) //right
                 {
+                    weapon.movingRight = true;
+                    weapon.position.X = position.X + 50;
                     position.X+= 3f;
                 }
                 if (keys.IsKeyDown(Keys.A)) //left
                 {
+                    weapon.movingRight = false;
+                    weapon.position.X = position.X - 25;
                     position.X-= 3f;
                 }
                 if (keys.IsKeyDown(Keys.B) && hasJumped == false)   //jump
@@ -88,10 +98,14 @@ namespace EverFight
             {
                 if (keys.IsKeyDown(Keys.Right)) //right
                 {
+                    weapon.movingRight = true;
+                    weapon.position.X = position.X + 50;
                     position.X+= 3f;
                 }
                 if (keys.IsKeyDown(Keys.Left)) //left
                 {
+                    weapon.movingRight = false;
+                    weapon.position.X = position.X - 25;
                     position.X-= 3f;
                 }
                 if (keys.IsKeyDown(Keys.L) && hasJumped == false)   //jump
@@ -100,8 +114,12 @@ namespace EverFight
                     velocity.Y = -5f;
                     hasJumped = true;
                 }
+
                 
+
             }
+
+            weapon.position.Y = position.Y + 50;
 
             //jumping stuff
             if (hasJumped == true)
@@ -121,13 +139,26 @@ namespace EverFight
             
         }
 
+        public void Respawn()
+        {
+            position = new Vector2(windowSize.X - (windowSize.X / 4), -200);
+            weapon.position = position + new Vector2(-25, 50);
+            weapon.movingRight = false;
+            hasDied = true;
+
+        }
+
         //Draw
         public void Draw(SpriteBatch sb)
         {
 
+
             sb.Begin();
             sb.Draw(spriteTexture, position, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f); //used for smaller machine scale
             sb.End();
+
+            weapon.Draw(sb);
+
         }
     }
 }

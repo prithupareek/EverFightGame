@@ -55,6 +55,7 @@ namespace EverFight
         //Update
         public void Update()
         {
+
             KeyboardState keys = Keyboard.GetState();   // get current state of keyboard
 
             //aim weapon
