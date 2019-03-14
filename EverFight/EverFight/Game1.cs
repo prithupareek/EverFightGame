@@ -39,6 +39,8 @@ namespace EverFight
         Delay respawnDelay1;
         Delay respawnDelay2;
 
+        Texture2D arrow;
+
 
         public Game1()
         {
@@ -98,6 +100,9 @@ namespace EverFight
             //respawn delay
             respawnDelay1 = new Delay(3f);
             respawnDelay2 = new Delay(3f);
+
+            //arrow sprite
+            arrow = Content.Load<Texture2D>("arrow");
 
         }
 
@@ -198,10 +203,13 @@ namespace EverFight
                 {
                     p1Projectiles.Remove(projectile);
 
+                    p2.respawn = true;
+
                     p2.position = new Vector2(windowSize.X - (windowSize.X / 4), -200);
                     p2Weapon.position = p2.position + new Vector2(-25, 50);
                     p2Weapon.movingRight = false;
                     p2.hasDied = true;
+                    p1.hasDied = false;
 
                     break;
                 }
@@ -212,14 +220,19 @@ namespace EverFight
                 {
                     p2Projectiles.Remove(projectile);
 
+                    p1.respawn = true;
+
                     p1.position = new Vector2((windowSize.X / 4) - 50, -200);
                     p1Weapon.position = p1.position + new Vector2(50, 50);
                     p1Weapon.movingRight = true;
                     p1.hasDied = true;
+                    p2.hasDied = false;
 
                     break;
                 }
             }
+
+            //respawn code 
 
             //respawn timer
             if (p2.position.Y < 0 && respawnDelay1.timerDone(gameTime))
@@ -234,23 +247,28 @@ namespace EverFight
             }
 
             //player reaches endzone
-            if (p1.position.X>= windowSize.X && p2.hasDied)
+            if (p1.position.X>= windowSize.X - p1.spriteTexture.Width)
             {
-                p1.hasWon = true;
+                if (p2.hasDied)
+                {
+                    p1.position.X = 0;
+                    
+                }
+                else
+                {
+                    p1.position.X = windowSize.X - p1.spriteTexture.Width;
+                }
             }
-            if (p2.position.X <= 0 && p1.hasDied)
+            if (p2.position.X <= 0)
             {
-                p2.hasWon = true;
-            }
-
-            //Game Over Scenario
-            if (p1.hasWon)
-            {
-                Debug.WriteLine("Player 1 Wins!!!");
-            }
-            else if (p2.hasWon)
-            {
-                Debug.WriteLine("Player 2 Wins!!!");
+                if (p1.hasDied)
+                {
+                    p2.position.X = windowSize.X - p2.spriteTexture.Width;
+                }
+                else
+                {
+                    p2.position.X = 0;
+                }
             }
 
             base.Update(gameTime);
@@ -273,6 +291,20 @@ namespace EverFight
 
             foreach (Projectile projectile in p1Projectiles) projectile.Draw(spriteBatch);
             foreach (Projectile projectile in p2Projectiles) projectile.Draw(spriteBatch);
+
+            //Game Over Scenario
+            if (p2.hasDied)
+            { 
+                spriteBatch.Begin();
+                spriteBatch.Draw(arrow, new Vector2(windowSize.X - 100 - arrow.Width, 100), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.FlipHorizontally, 0f);
+                spriteBatch.End();
+            }
+            else if (p1.hasDied)
+            {
+                spriteBatch.Begin();
+                spriteBatch.Draw(arrow, new Vector2(100, 100), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                spriteBatch.End();
+            }
 
             base.Draw(gameTime);
         }

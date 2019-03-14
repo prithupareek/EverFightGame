@@ -28,6 +28,7 @@ namespace EverFight
         public BoundingBox boundingBox;
         public Boolean hasDied;
         public Boolean hasWon;
+        public Boolean respawn;
 
         //Constructor
         public Player(int num, Vector2 ws) {
