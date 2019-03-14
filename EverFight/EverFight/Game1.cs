@@ -23,8 +23,8 @@ namespace EverFight
         Vector2 windowSize;
 
         //arraylist to store bullets
-        List<Projectile> p1Projectiles;
-        List<Projectile> p2Projectiles;
+        //List<Projectile> p1.weapon.projectiles;
+        //List<Projectile> p2.weapon.projectiles;
 
         //bullets texture.. don't know if there is a better way to do this
         Texture2D bulletTexture;
@@ -76,8 +76,8 @@ namespace EverFight
             p2 = new Player(2, windowSize);
 
             // Constructors for the projectile arraylists
-            p1Projectiles = new List<Projectile>();
-            p2Projectiles = new List<Projectile>();
+            //p1.weapon.projectiles = new List<Projectile>();
+            //p2.weapon.projectiles = new List<Projectile>();
 
             // TODO: use this.Content to load your game content here
             p1.LoadContent(Content);
@@ -126,43 +126,43 @@ namespace EverFight
             if (Keyboard.GetState().IsKeyDown(Keys.V) && pastKey.IsKeyUp(Keys.V))   //p1
             {
 
-                p1Projectiles.Add(new Projectile(p1.weapon.position, 1, p1.weapon.rotation, windowSize, bulletTexture, p1.spriteTexture, p1.weapon.movingRight));
+                p1.weapon.projectiles.Add(new Projectile(p1.weapon.position, 1, p1.weapon.rotation, windowSize, bulletTexture, p1.spriteTexture, p1.weapon.movingRight));
             }
             if (Keyboard.GetState().IsKeyDown(Keys.K) && pastKey.IsKeyUp(Keys.K))   //p2
             { 
-                p2Projectiles.Add(new Projectile(p2.weapon.position, 2, p2.weapon.rotation, windowSize, bulletTexture, p2.spriteTexture, p2.weapon.movingRight));
+                p2.weapon.projectiles.Add(new Projectile(p2.weapon.position, 2, p2.weapon.rotation, windowSize, bulletTexture, p2.spriteTexture, p2.weapon.movingRight));
             }
 
             pastKey = Keyboard.GetState();
 
             //delete the bullets if they hit the ground
-            for (int i=0; i<p1Projectiles.Count; i++)
+            for (int i=0; i<p1.weapon.projectiles.Count; i++)
             {
-                if (p1Projectiles[i].position.Y >= windowSize.Y - bulletTexture.Height*0.1)
+                if (p1.weapon.projectiles[i].position.Y >= windowSize.Y - bulletTexture.Height*0.1)
                 {
-                    p1Projectiles.RemoveAt(i);
+                    p1.weapon.projectiles.RemoveAt(i);
                 }
             }
-            for (int i = 0; i < p2Projectiles.Count; i++)
+            for (int i = 0; i < p2.weapon.projectiles.Count; i++)
             {
-                if (p2Projectiles[i].position.Y >= windowSize.Y - bulletTexture.Height * 0.1)
+                if (p2.weapon.projectiles[i].position.Y >= windowSize.Y - bulletTexture.Height * 0.1)
                 {
-                    p2Projectiles.RemoveAt(i);
+                    p2.weapon.projectiles.RemoveAt(i);
                 }
             }
 
             //update the bullets
-            foreach (Projectile projectile in p1Projectiles) projectile.Update();
-            foreach (Projectile projectile in p2Projectiles) projectile.Update();
+            foreach (Projectile projectile in p1.weapon.projectiles) projectile.Update();
+            foreach (Projectile projectile in p2.weapon.projectiles) projectile.Update();
 
 
 
             //projectile - player collision detection
-            foreach (Projectile projectile in p1Projectiles)
+            foreach (Projectile projectile in p1.weapon.projectiles)
             {
                 if (projectile.boundingBox.Intersects(p2.boundingBox))
                 {
-                    p1Projectiles.Remove(projectile);
+                    p1.weapon.projectiles.Remove(projectile);
 
                     p2.Respawn();
                     p1.hasDied = false;
@@ -171,11 +171,11 @@ namespace EverFight
                     break;
                 }
             }
-            foreach (Projectile projectile in p2Projectiles)
+            foreach (Projectile projectile in p2.weapon.projectiles)
             {
                 if (projectile.boundingBox.Intersects(p1.boundingBox))
                 {
-                    p2Projectiles.Remove(projectile);
+                    p2.weapon.projectiles.Remove(projectile);
 
 
                     p1.Respawn();
@@ -212,6 +212,10 @@ namespace EverFight
                     p1.position.X = windowSize.X - p1.spriteTexture.Width;
                 }
             }
+            if (p1.position.X <= 0)
+            {
+                p1.position.X = 0;
+            }
             if (p2.position.X <= 0)
             {
                 if (p1.hasDied)
@@ -223,6 +227,16 @@ namespace EverFight
                 {
                     p2.position.X = 0;
                 }
+            }
+            if (p2.position.X >= windowSize.X - p2.spriteTexture.Width)
+            {
+                p2.position.X = windowSize.X - p2.spriteTexture.Width;
+            }
+
+            //check if players intersect each other
+            if (p1.playerWeaponBox.Intersects(p2.playerWeaponBox))
+            {
+                Debug.WriteLine("Hit");
             }
 
             base.Update(gameTime);
@@ -240,8 +254,8 @@ namespace EverFight
             p1.Draw(spriteBatch);
             p2.Draw(spriteBatch);
 
-            foreach (Projectile projectile in p1Projectiles) projectile.Draw(spriteBatch);
-            foreach (Projectile projectile in p2Projectiles) projectile.Draw(spriteBatch);
+            foreach (Projectile projectile in p1.weapon.projectiles) projectile.Draw(spriteBatch);
+            foreach (Projectile projectile in p2.weapon.projectiles) projectile.Draw(spriteBatch);
 
             //Game Over Scenario
             if (p2.hasDied)

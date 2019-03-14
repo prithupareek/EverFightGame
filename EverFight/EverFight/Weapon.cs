@@ -20,13 +20,14 @@ namespace EverFight
     {
 
         //Properties
-        Texture2D spriteTexture; //the image for our sprite
+        public Texture2D spriteTexture; //the image for our sprite
         public Vector2 position; //the position for our sprite
         int playerNum; //stores if p1 or p2
         Vector2 windowSize; //not sure if needed
         public float rotation = 0f;
         float rotationSpeed = 0f;
         public Boolean movingRight;
+        public List<Projectile> projectiles;
 
         //Constructor
         public Weapon(Vector2 pos, int player) {
@@ -43,6 +44,8 @@ namespace EverFight
                 position = pos + new Vector2(-25, 50);
                 movingRight = false;
             }
+
+            projectiles = new List<Projectile>();
         }
 
         //Load Content
