@@ -4,14 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Microsoft.Xna.Framework;
-
 namespace EverFight
 {
-    class Camera
+    class LevelManager
     {
 
-        public Camera()
+        Level level1;
+
+        public LevelManager()
+        {
+
+        }
+
+        public void loadLevel(int number)
         {
 
         }

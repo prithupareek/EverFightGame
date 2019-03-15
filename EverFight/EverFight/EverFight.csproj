@@ -100,8 +100,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Camera.cs" />
     <Compile Include="Delay.cs" />
+    <Compile Include="Level.cs" />
+    <Compile Include="LevelManager.cs" />
+    <Compile Include="Platform.cs" />
     <Compile Include="Projectile.cs" />
     <Compile Include="Weapon.cs" />
     <Compile Include="Player.cs" />

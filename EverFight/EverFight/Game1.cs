@@ -233,11 +233,11 @@ namespace EverFight
                 p2.position.X = windowSize.X - p2.spriteTexture.Width;
             }
 
-            //check if players intersect each other
-            if (p1.playerWeaponBox.Intersects(p2.playerWeaponBox))
-            {
-                Debug.WriteLine("Hit");
-            }
+            ////check if players intersect each other
+            //if (p1.playerWeaponBox.Intersects(p2.playerWeaponBox))
+            //{
+            //    Debug.WriteLine("Hit");
+            //}
 
             base.Update(gameTime);
         }

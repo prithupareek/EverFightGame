@@ -29,7 +29,7 @@ namespace EverFight
         public Boolean hasDied;
         public Boolean hasWon;
         public Weapon weapon;
-        public BoundingBox playerWeaponBox;
+        //public BoundingBox playerWeaponBox;
 
         //Constructor
         public Player(int num, Vector2 ws) {
@@ -119,14 +119,14 @@ namespace EverFight
 
             //TODO: Prevent players from crossing each other
             //player weapon bounding box stuff
-            if (weapon.movingRight)
-            {
-                playerWeaponBox = new BoundingBox(new Vector3(weapon.position.X + weapon.spriteTexture.Width * 0.15f, position.Y, 0), new Vector3(position.X + (spriteTexture.Width), position.Y + (spriteTexture.Height), 0));
-            }
-            if (!weapon.movingRight)
-            {
-                playerWeaponBox = new BoundingBox(new Vector3(weapon.position.X + weapon.spriteTexture.Width * 0.15f, position.Y, 0), new Vector3(position.X + (spriteTexture.Width), position.Y + (spriteTexture.Height), 0));
-            }
+            //if (weapon.movingRight)
+            //{
+            //    playerWeaponBox = new BoundingBox(new Vector3(weapon.position.X + weapon.spriteTexture.Width * 0.15f, position.Y, 0), new Vector3(position.X + (spriteTexture.Width), position.Y + (spriteTexture.Height), 0));
+            //}
+            //if (!weapon.movingRight)
+            //{
+            //    playerWeaponBox = new BoundingBox(new Vector3(weapon.position.X + weapon.spriteTexture.Width * 0.15f, position.Y, 0), new Vector3(position.X + (spriteTexture.Width), position.Y + (spriteTexture.Height), 0));
+            //}
 
             weapon.position.Y = position.Y + 50;
 
