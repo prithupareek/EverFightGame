@@ -37,6 +37,7 @@ namespace EverFight
 
         Texture2D arrow;
 
+        LevelManager levelManager;
 
         public Game1()
         {
@@ -93,6 +94,10 @@ namespace EverFight
             //arrow sprite
             arrow = Content.Load<Texture2D>("arrow");
 
+            levelManager = new LevelManager();
+            levelManager.LoadLevel(Content);
+
+
         }
 
         /// <summary>
@@ -119,8 +124,8 @@ namespace EverFight
                 this.Exit();
             }
 
-            p1.Update();
-            p2.Update();
+            p1.Update(levelManager.levels[levelManager.activeLevel].platforms);
+            p2.Update(levelManager.levels[levelManager.activeLevel].platforms);
 
             //on keypress for bullets
             if (Keyboard.GetState().IsKeyDown(Keys.V) && pastKey.IsKeyUp(Keys.V))   //p1
@@ -206,6 +211,7 @@ namespace EverFight
                 {
                     p1.position.X = 0;
                     p2.Respawn();
+                    levelManager.activeLevel++;
                 }
                 else
                 {
@@ -222,6 +228,7 @@ namespace EverFight
                 {
                     p2.position.X = windowSize.X - p2.spriteTexture.Width;
                     p1.Respawn();
+                    levelManager.activeLevel--;
                 }
                 else
                 {
@@ -232,6 +239,7 @@ namespace EverFight
             {
                 p2.position.X = windowSize.X - p2.spriteTexture.Width;
             }
+
 
             ////check if players intersect each other
             //if (p1.playerWeaponBox.Intersects(p2.playerWeaponBox))
@@ -270,6 +278,8 @@ namespace EverFight
                 spriteBatch.Draw(arrow, new Vector2(100, 100), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
                 spriteBatch.End();
             }
+
+            levelManager.DrawLevel(spriteBatch);
 
             base.Draw(gameTime);
         }

@@ -42,11 +42,11 @@ namespace EverFight
 
             if (playerNumber == 1)
             {
-                position = new Vector2((windowSize.X / 4) - 50, windowSize.Y - (windowSize.Y / 3)); //initial player position
+                position = new Vector2((windowSize.X / 4) - 50, 10); //initial player position
             }
             else if (playerNumber == 2)
             {
-                position = new Vector2(windowSize.X - (windowSize.X / 4), windowSize.Y - (windowSize.Y/3)); //initial player position
+                position = new Vector2(windowSize.X - (windowSize.X / 4), 10); //initial player position
             }
 
             weapon = new Weapon(position, playerNumber);
@@ -62,7 +62,7 @@ namespace EverFight
         }
 
         //Update
-        public void Update()
+        public void Update(List<Platform> platforms)
         {
             weapon.Update();
             
@@ -141,15 +141,31 @@ namespace EverFight
                 position.Y = windowSize.Y - spriteTexture.Height;
                 hasJumped = false;
             }
+            //stop jumping if intersecting platform
+            foreach (Platform platform in platforms)
+            {
+                if (boundingBox.Intersects(platform.boundingBox))
+                {
+                    if (position.Y + spriteTexture.Height > platform.position.Y)
+                    {
+                        position.Y = platform.position.Y - spriteTexture.Height;
+                        hasJumped = false;
+                    }
+                }
+            }
             if (hasJumped == false)
             {
                 velocity.Y = 0f;
             }
-            
+
+
+
         }
 
         public void Respawn()
         {
+            //TODO: Change for p1 vs p2
+
             position = new Vector2(windowSize.X - (windowSize.X / 4), -200);
             weapon.position = position + new Vector2(-25, 50);
             weapon.movingRight = false;
