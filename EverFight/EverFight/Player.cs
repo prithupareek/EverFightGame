@@ -130,6 +130,31 @@ namespace EverFight
 
             weapon.position.Y = position.Y + 50;
 
+            float bottomPosOfSprite = position.Y + spriteTexture.Height;
+
+            
+            //stop jumping if intersecting platform
+            foreach (Platform platform in platforms)
+            {
+
+                //if on top of platform
+                if (boundingBox.Intersects(platform.boundingBox))
+                {
+
+                    if (bottomPosOfSprite <= platform.boundingBox.Min.Y)
+                    {
+                        position.Y = platform.position.Y - spriteTexture.Height;
+                        hasJumped = false;
+                    }
+                }
+
+                //if walk off platform
+                if (position.Y + spriteTexture.Height < windowSize.Y && !boundingBox.Intersects(platform.boundingBox))
+                {
+                    hasJumped = true;
+                }
+            }
+
             //jumping stuff
             if (hasJumped == true)
             {
@@ -141,18 +166,7 @@ namespace EverFight
                 position.Y = windowSize.Y - spriteTexture.Height;
                 hasJumped = false;
             }
-            //stop jumping if intersecting platform
-            foreach (Platform platform in platforms)
-            {
-                if (boundingBox.Intersects(platform.boundingBox))
-                {
-                    if (position.Y + spriteTexture.Height > platform.position.Y)
-                    {
-                        position.Y = platform.position.Y - spriteTexture.Height;
-                        hasJumped = false;
-                    }
-                }
-            }
+
             if (hasJumped == false)
             {
                 velocity.Y = 0f;
@@ -179,7 +193,7 @@ namespace EverFight
 
 
             sb.Begin();
-            sb.Draw(spriteTexture, position, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f); //used for smaller machine scale
+            sb.Draw(spriteTexture, position, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             sb.End();
 
             weapon.Draw(sb);

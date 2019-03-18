@@ -22,7 +22,7 @@ namespace EverFight
             position = pos;
             dimensions = dim;
             platformTexture = texture2D;
-            boundingBox = new BoundingBox(new Vector3(position, 0), new Vector3(position.X + platformTexture.Width, position.Y + platformTexture.Height, 0));
+            boundingBox = new BoundingBox(new Vector3(position, 0), new Vector3(position.X + dimensions.X*40, position.Y + dimensions.Y*40, 0));
 
         }
 
@@ -31,9 +31,9 @@ namespace EverFight
         public void Draw(SpriteBatch sb)
         {
             sb.Begin();
-            for (int x = 1; x<dimensions.X+1; x++)
+            for (int x = 0; x<dimensions.X; x++)
             {
-                for (int y=1; y<dimensions.Y+1; y++)
+                for (int y=0; y<dimensions.Y; y++)
                 {
                     sb.Draw(platformTexture, new Vector2(position.X + x * 40, position.Y + y * 40));
                 }

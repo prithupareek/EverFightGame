@@ -124,6 +124,8 @@ namespace EverFight
                 this.Exit();
             }
 
+            Debug.WriteLine(levelManager.levels[levelManager.activeLevel].platforms.Count);
+
             p1.Update(levelManager.levels[levelManager.activeLevel].platforms);
             p2.Update(levelManager.levels[levelManager.activeLevel].platforms);
 

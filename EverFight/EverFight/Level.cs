@@ -23,12 +23,12 @@ namespace EverFight
 
             if (level == 0)
             {
-                platforms.Add(new Platform(new Vector2(0, 600), new Vector2(19, 1), platformTexture));
+                platforms.Add(new Platform(new Vector2(100, 400), new Vector2(19, 1), platformTexture));
                
             }
             if (level == 1)
             {
-                platforms.Add(new Platform(new Vector2(100, 100), new Vector2(10,2), platformTexture));
+                platforms.Add(new Platform(new Vector2(0, 600), new Vector2(10,2), platformTexture));
             }
             if (level == 2)
             {
