@@ -28,11 +28,11 @@ namespace EverFight
             }
             if (level == 1)
             {
-                platforms.Add(new Platform(new Vector2(0, 600), new Vector2(10,2), platformTexture));
+                platforms.Add(new Platform(new Vector2(100, 550), new Vector2(10,3), platformTexture));
             }
             if (level == 2)
             {
-                platforms.Add(new Platform(new Vector2(200, 200), new Vector2(3, 3), platformTexture));
+                platforms.Add(new Platform(new Vector2(200, 200), new Vector2(3, 1), platformTexture));
             }
 
 

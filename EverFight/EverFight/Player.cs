@@ -29,6 +29,7 @@ namespace EverFight
         public Boolean hasDied;
         public Boolean hasWon;
         public Weapon weapon;
+        float bottomOfSprite;
         //public BoundingBox playerWeaponBox;
 
         //Constructor
@@ -117,34 +118,38 @@ namespace EverFight
                 }
             }
 
-            //TODO: Prevent players from crossing each other
-            //player weapon bounding box stuff
-            //if (weapon.movingRight)
-            //{
-            //    playerWeaponBox = new BoundingBox(new Vector3(weapon.position.X + weapon.spriteTexture.Width * 0.15f, position.Y, 0), new Vector3(position.X + (spriteTexture.Width), position.Y + (spriteTexture.Height), 0));
-            //}
-            //if (!weapon.movingRight)
-            //{
-            //    playerWeaponBox = new BoundingBox(new Vector3(weapon.position.X + weapon.spriteTexture.Width * 0.15f, position.Y, 0), new Vector3(position.X + (spriteTexture.Width), position.Y + (spriteTexture.Height), 0));
-            //}
 
             weapon.position.Y = position.Y + 50;
-
-            float bottomPosOfSprite = position.Y + spriteTexture.Height;
-
             
             //stop jumping if intersecting platform
             foreach (Platform platform in platforms)
             {
 
-                //if on top of platform
                 if (boundingBox.Intersects(platform.boundingBox))
                 {
-
-                    if (bottomPosOfSprite <= platform.boundingBox.Min.Y)
+                    //if on top of platform
+                    if (position.Y + spriteTexture.Height < platform.position.Y + 20)
                     {
-                        position.Y = platform.position.Y - spriteTexture.Height;
+                        //position.Y = platform.position.Y - spriteTexture.Height;
                         hasJumped = false;
+                    }
+
+                    //if on the bottom of the platform
+                    if (position.Y > platform.position.Y + platform.pixDimensions.Y - 20)
+                    {
+                        velocity.Y = -velocity.Y;
+                    }
+
+                    //if hitting the right side of the platform
+                    if (position.X <= platform.position.X + platform.pixDimensions.X  && position.X > platform.position.X + platform.pixDimensions.X/2 && !(position.Y + spriteTexture.Height < platform.position.Y + 20) && !(position.Y > platform.position.Y + platform.pixDimensions.Y - 20))
+                    {
+                        position.X = platform.position.X + platform.pixDimensions.X;
+                    }
+
+                    //if hitting the left side of the platform
+                    if (position.X + spriteTexture.Width >= platform.position.X && position.X < platform.position.X + platform.pixDimensions.X/2 && !(position.Y + spriteTexture.Height < platform.position.Y + 20) && !(position.Y > platform.position.Y + platform.pixDimensions.Y - 20))
+                    {
+                        position.X = platform.position.X - spriteTexture.Width;
                     }
                 }
 
@@ -153,6 +158,7 @@ namespace EverFight
                 {
                     hasJumped = true;
                 }
+
             }
 
             //jumping stuff

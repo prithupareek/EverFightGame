@@ -16,6 +16,7 @@ namespace EverFight
         public Vector2 position;
         Vector2 dimensions;
         public BoundingBox boundingBox;
+        public Vector2 pixDimensions;
 
         public Platform(Vector2 pos, Vector2 dim, Texture2D texture2D)
         {
@@ -23,6 +24,8 @@ namespace EverFight
             dimensions = dim;
             platformTexture = texture2D;
             boundingBox = new BoundingBox(new Vector3(position, 0), new Vector3(position.X + dimensions.X*40, position.Y + dimensions.Y*40, 0));
+
+            pixDimensions = new Vector2(dimensions.X * 40, dimensions.Y * 40);
 
         }
 
