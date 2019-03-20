@@ -27,10 +27,14 @@ namespace EverFight
         public Boolean hasJumped;
         public BoundingBox boundingBox;
         public Boolean hasDied;
-        public Boolean hasWon;
         public Weapon weapon;
-        float bottomOfSprite;
+
         //public BoundingBox playerWeaponBox;
+
+        Boolean touchingPlatTop;
+        Boolean touchingPlatBot;
+
+
 
         //Constructor
         public Player(int num, Vector2 ws) {
@@ -39,15 +43,17 @@ namespace EverFight
             windowSize = ws;
             hasJumped = true;
             hasDied = false;
-            
+
+            touchingPlatTop = false;
+            touchingPlatBot = false;
 
             if (playerNumber == 1)
             {
-                position = new Vector2((windowSize.X / 4) - 50, 10); //initial player position
+                position = new Vector2(100, 10); //initial player position
             }
             else if (playerNumber == 2)
             {
-                position = new Vector2(windowSize.X - (windowSize.X / 4), 10); //initial player position
+                position = new Vector2(windowSize.X - 100, 10); //initial player position
             }
 
             weapon = new Weapon(position, playerNumber);
@@ -92,6 +98,7 @@ namespace EverFight
                     position.Y -= 10f;
                     velocity.Y = -10f;
                     hasJumped = true;
+                    touchingPlatTop = false;
                 }
 
 
@@ -115,50 +122,88 @@ namespace EverFight
                     position.Y -= 10f;
                     velocity.Y = -10f;
                     hasJumped = true;
+                    touchingPlatTop = false;
                 }
             }
 
 
             weapon.position.Y = position.Y + 50;
-            
+
             //stop jumping if intersecting platform
+            //foreach (Platform platform in platforms)
+            //{
+
+            //    if (boundingBox.Intersects(platform.boundingBox))
+            //    {
+            //        //if on top of platform -- Works
+            //        if (position.Y + spriteTexture.Height < platform.position.Y + 20)
+            //        {
+            //            hasJumped = false;
+            //            touchingPlatTop = true;
+            //        }
+
+            //        //if on the bottom of the platform -- Works
+            //        else if (position.Y > platform.position.Y + platform.pixDimensions.Y - 20)
+            //        {
+            //            velocity.Y = -velocity.Y;
+            //        }
+
+            //        //if hitting the right side of the platform TODO
+            //        //else if (position.X <= platform.position.X + platform.pixDimensions.X && position.X > platform.position.X + platform.pixDimensions.X / 2 && !(position.Y + spriteTexture.Height < platform.position.Y + 40) && !(position.Y > platform.position.Y + platform.pixDimensions.Y - 40))
+            //        //{
+            //        //    position.X = platform.position.X + platform.pixDimensions.X;
+            //        //}
+
+            //        ////if hitting the left side of the platform
+            //        //else if (position.X + spriteTexture.Width >= platform.position.X && position.X < platform.position.X + platform.pixDimensions.X / 2 && !(position.Y + spriteTexture.Height < platform.position.Y + 20) && !(position.Y > platform.position.Y + platform.pixDimensions.Y - 20))
+            //        //{
+            //        //    position.X = platform.position.X - spriteTexture.Width;
+            //        //}
+
+            //    }
+
+            //    else if (!boundingBox.Intersects(platform.boundingBox) && position.Y + spriteTexture.Height < platform.position.Y + 100)
+            //    {
+            //        touchingPlatTop = false;
+            //    }
+
+            //    if (!touchingPlatTop)
+            //    {
+            //        hasJumped = true;
+            //    }
+
+            //}
+
+            float bottomOfSprite = position.Y + spriteTexture.Height;
+
+            //loop through all of the platforms
             foreach (Platform platform in platforms)
             {
-
-                if (boundingBox.Intersects(platform.boundingBox))
+                //if on top
+                if (boundingBox.Intersects(platform.boundingBox) && bottomOfSprite < platform.position.Y + 10)
                 {
-                    //if on top of platform
-                    if (position.Y + spriteTexture.Height < platform.position.Y + 20)
-                    {
-                        //position.Y = platform.position.Y - spriteTexture.Height;
-                        hasJumped = false;
-                    }
-
-                    //if on the bottom of the platform
-                    if (position.Y > platform.position.Y + platform.pixDimensions.Y - 20)
-                    {
-                        velocity.Y = -velocity.Y;
-                    }
-
-                    //if hitting the right side of the platform
-                    if (position.X <= platform.position.X + platform.pixDimensions.X  && position.X > platform.position.X + platform.pixDimensions.X/2 && !(position.Y + spriteTexture.Height < platform.position.Y + 20) && !(position.Y > platform.position.Y + platform.pixDimensions.Y - 20))
-                    {
-                        position.X = platform.position.X + platform.pixDimensions.X;
-                    }
-
-                    //if hitting the left side of the platform
-                    if (position.X + spriteTexture.Width >= platform.position.X && position.X < platform.position.X + platform.pixDimensions.X/2 && !(position.Y + spriteTexture.Height < platform.position.Y + 20) && !(position.Y > platform.position.Y + platform.pixDimensions.Y - 20))
-                    {
-                        position.X = platform.position.X - spriteTexture.Width;
-                    }
+                    touchingPlatTop = true;
                 }
 
-                //if walk off platform
-                if (position.Y + spriteTexture.Height < windowSize.Y && !boundingBox.Intersects(platform.boundingBox))
+                //if on bottom 
+                else if (boundingBox.Intersects(platform.boundingBox) && bottomOfSprite > platform.position.Y + platform.pixDimensions.Y - 10)
                 {
-                    hasJumped = true;
+                    touchingPlatBot = true;
                 }
 
+                
+
+
+            }
+
+            if (touchingPlatTop)
+            {
+                hasJumped = false;
+            }
+            if (touchingPlatBot)
+            {
+                velocity.Y = -velocity.Y;
+                touchingPlatBot = false;
             }
 
             //jumping stuff
@@ -188,7 +233,7 @@ namespace EverFight
 
             if (playerNumber == 1)
             {
-                position = new Vector2((windowSize.X / 4), -100);
+                position = new Vector2(100, -200);
                 weapon.position = position + new Vector2(50, 50);
                 weapon.movingRight = true;
                 hasDied = true;
@@ -196,7 +241,7 @@ namespace EverFight
             }
             else if (playerNumber == 2)
             {
-                position = new Vector2(windowSize.X - (windowSize.X / 4), -100);
+                position = new Vector2(windowSize.X - 100, -200);
                 weapon.position = position + new Vector2(-25, 50);
                 weapon.movingRight = false;
                 hasDied = true;

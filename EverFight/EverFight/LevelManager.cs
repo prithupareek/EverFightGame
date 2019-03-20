@@ -15,6 +15,8 @@ namespace EverFight
         public List<Level> levels;
         public int activeLevel;
         Vector2 windowSize;
+        Texture2D p1Win;
+        Texture2D p2Win;
 
 
         public LevelManager(Vector2 ws)
@@ -32,6 +34,9 @@ namespace EverFight
             levels.Add(new Level(1, platformTexture, windowSize));
             levels.Add(new Level(2, platformTexture, windowSize));
 
+            p1Win = cm.Load<Texture2D>("p1Win");
+            p2Win = cm.Load<Texture2D>("p2Win");
+
 
         }
 
@@ -39,7 +44,22 @@ namespace EverFight
 
         public void DrawLevel(SpriteBatch sb)
         {
-            levels[activeLevel].Draw(sb);
+            if (activeLevel > 2)
+            {
+                sb.Begin();
+                sb.Draw(p1Win, new Vector2(100, 100));
+                sb.End();
+            }
+            else if (activeLevel < 0)
+            {
+                sb.Begin();
+                sb.Draw(p2Win, new Vector2(windowSize.X - 100 - p2Win.Width, 100));
+                sb.End();
+            }
+            else
+            {
+                levels[activeLevel].Draw(sb);
+            }
         }
     }
 }

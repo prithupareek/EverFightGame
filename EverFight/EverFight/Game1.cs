@@ -32,8 +32,11 @@ namespace EverFight
         //pastkey for bullets firing
         KeyboardState pastKey;
 
-        Delay respawnDelay1;
-        Delay respawnDelay2;
+        //Delay respawnDelay1;
+        //Delay respawnDelay2;
+
+        int p1DelayCounter;
+        int p2DelayCounter;
 
         Texture2D arrow;
 
@@ -88,8 +91,8 @@ namespace EverFight
             bulletTexture = Content.Load<Texture2D>("projectile");
 
             //respawn delay
-            respawnDelay1 = new Delay(100f);
-            respawnDelay2 = new Delay(100f);
+            //respawnDelay1 = new Delay(5f);
+            //respawnDelay2 = new Delay(5f);
 
             //arrow sprite
             arrow = Content.Load<Texture2D>("arrow");
@@ -124,10 +127,11 @@ namespace EverFight
                 this.Exit();
             }
 
-            Debug.WriteLine(levelManager.levels[levelManager.activeLevel].platforms.Count);
-
-            p1.Update(levelManager.levels[levelManager.activeLevel].platforms);
-            p2.Update(levelManager.levels[levelManager.activeLevel].platforms);
+            if (levelManager.activeLevel < 3 && levelManager.activeLevel > -1)
+            {
+                p1.Update(levelManager.levels[levelManager.activeLevel].platforms);
+                p2.Update(levelManager.levels[levelManager.activeLevel].platforms);
+            }
 
             //on keypress for bullets
             if (Keyboard.GetState().IsKeyDown(Keys.V) && pastKey.IsKeyUp(Keys.V))   //p1
@@ -172,6 +176,9 @@ namespace EverFight
                     p1.weapon.projectiles.Remove(projectile);
 
                     p2.Respawn();
+
+                    p2DelayCounter = 0;
+
                     p1.hasDied = false;
 
 
@@ -187,6 +194,8 @@ namespace EverFight
 
                     p1.Respawn();
 
+                    p1DelayCounter = 0;
+
                     p2.hasDied = false;
 
                     break;
@@ -195,15 +204,26 @@ namespace EverFight
 
 
             //respawn timer
-            if (p2.position.Y < 0 && respawnDelay1.timerDone(gameTime))
+            if (p2.position.Y < 0 && p2.hasDied)
             {
-                p2.velocity.Y = 5;
-                p2.hasJumped = true;
+                p2DelayCounter++;
             }
-            if (p1.position.Y < 0 && respawnDelay2.timerDone(gameTime))
+            if (p1.position.Y < 0 && p1.hasDied)
             {
-                p1.velocity.Y = 5;
+                p1DelayCounter++;
+            }
+
+            if (p1DelayCounter == 200)
+            {
+                p1DelayCounter = 0;
+                p1.velocity.Y = 0;
                 p1.hasJumped = true;
+            }
+            if (p2DelayCounter == 200)
+            {
+                p2DelayCounter = 0;
+                p2.velocity.Y = 0;
+                p2.hasJumped = true;
             }
 
             //player reaches endzone
@@ -258,30 +278,34 @@ namespace EverFight
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Azure);
 
-            // TODO: Add your drawing code here
-            p1.Draw(spriteBatch);
-            p2.Draw(spriteBatch);
+                GraphicsDevice.Clear(Color.Azure);
 
-            foreach (Projectile projectile in p1.weapon.projectiles) projectile.Draw(spriteBatch);
-            foreach (Projectile projectile in p2.weapon.projectiles) projectile.Draw(spriteBatch);
-
-            //Game Over Scenario
-            if (p2.hasDied)
-            { 
-                spriteBatch.Begin();
-                spriteBatch.Draw(arrow, new Vector2(windowSize.X - 100 - arrow.Width, 100), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.FlipHorizontally, 0f);
-                spriteBatch.End();
-            }
-            else if (p1.hasDied)
+            if (levelManager.activeLevel > -1 && levelManager.activeLevel < 3)
             {
-                spriteBatch.Begin();
-                spriteBatch.Draw(arrow, new Vector2(100, 100), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-                spriteBatch.End();
+                // TODO: Add your drawing code here
+                p1.Draw(spriteBatch);
+                p2.Draw(spriteBatch);
             }
 
-            levelManager.DrawLevel(spriteBatch);
+                foreach (Projectile projectile in p1.weapon.projectiles) projectile.Draw(spriteBatch);
+                foreach (Projectile projectile in p2.weapon.projectiles) projectile.Draw(spriteBatch);
+
+                //Game Over Scenario
+                if (p2.hasDied && levelManager.activeLevel<3)
+                {
+                    spriteBatch.Begin();
+                    spriteBatch.Draw(arrow, new Vector2(windowSize.X - 100 - arrow.Width, 100), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.FlipHorizontally, 0f);
+                    spriteBatch.End();
+                }
+                else if (p1.hasDied && levelManager.activeLevel>-1)
+                {
+                    spriteBatch.Begin();
+                    spriteBatch.Draw(arrow, new Vector2(100, 100), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                    spriteBatch.End();
+                }
+
+                levelManager.DrawLevel(spriteBatch);
 
             base.Draw(gameTime);
         }
