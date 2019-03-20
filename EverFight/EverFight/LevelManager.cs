@@ -22,11 +22,12 @@ namespace EverFight
         public LevelManager(Vector2 ws)
         {
             levels = new List<Level>();
-            activeLevel = 1;
+            activeLevel = 1;    //active level is set to the middle of the map
             windowSize = ws;
 
         }
 
+        //create the levels, load the win screen images
         public void LoadLevel(ContentManager cm)
         {
             Texture2D platformTexture = cm.Load<Texture2D>("black");
@@ -44,6 +45,8 @@ namespace EverFight
 
         public void DrawLevel(SpriteBatch sb)
         {
+
+            //draw win screen images if ative level is beyond created levels
             if (activeLevel > 2)
             {
                 sb.Begin();

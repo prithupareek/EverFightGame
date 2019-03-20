@@ -226,7 +226,7 @@ namespace EverFight
                 p2.hasJumped = true;
             }
 
-            //player reaches endzone
+            //player reaches endzone of current level
             if (p1.position.X>= windowSize.X - p1.spriteTexture.Width)
             {
                 if (p2.hasDied)

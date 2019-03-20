@@ -23,6 +23,7 @@ namespace EverFight
             platformTexture = pTex;
             windowSize = ws;
 
+            //add the platforms to the level based on level
             if (level == 0)
             {
                 platforms.Add(new Platform(new Vector2(windowSize.X - 640, windowSize.Y - 150), new Vector2(16, 1), platformTexture));
@@ -40,10 +41,6 @@ namespace EverFight
             {
                 platforms.Add(new Platform(new Vector2(0, windowSize.Y - 150), new Vector2(16, 1), platformTexture));
             }
-
-
-
-
         }
 
         public void Draw(SpriteBatch sb)

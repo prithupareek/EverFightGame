@@ -7,6 +7,11 @@ using System.Threading.Tasks;
 
 namespace EverFight
 {
+
+    /// <summary>
+    /// NOTE: This Class is not currently used in my program. Will try to figure out how to implment it in for the beta version.
+    /// Right now the timer is just a simple counter in the Game1 class.
+    /// </summary>
     class Delay
     {
         //Properties
