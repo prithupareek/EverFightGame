@@ -88,13 +88,13 @@ namespace EverFight
             bulletTexture = Content.Load<Texture2D>("projectile");
 
             //respawn delay
-            respawnDelay1 = new Delay(3f);
-            respawnDelay2 = new Delay(3f);
+            respawnDelay1 = new Delay(100f);
+            respawnDelay2 = new Delay(100f);
 
             //arrow sprite
             arrow = Content.Load<Texture2D>("arrow");
 
-            levelManager = new LevelManager();
+            levelManager = new LevelManager(windowSize);
             levelManager.LoadLevel(Content);
 
 

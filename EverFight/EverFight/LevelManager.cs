@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -13,21 +14,25 @@ namespace EverFight
 
         public List<Level> levels;
         public int activeLevel;
+        Vector2 windowSize;
 
 
-        public LevelManager()
+        public LevelManager(Vector2 ws)
         {
             levels = new List<Level>();
             activeLevel = 1;
+            windowSize = ws;
 
         }
 
         public void LoadLevel(ContentManager cm)
         {
             Texture2D platformTexture = cm.Load<Texture2D>("black");
-            levels.Add(new Level(0, platformTexture));
-            levels.Add(new Level(1, platformTexture));
-            levels.Add(new Level(2, platformTexture));
+            levels.Add(new Level(0, platformTexture, windowSize));
+            levels.Add(new Level(1, platformTexture, windowSize));
+            levels.Add(new Level(2, platformTexture, windowSize));
+
+
         }
 
        

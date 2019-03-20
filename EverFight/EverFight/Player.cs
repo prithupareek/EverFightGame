@@ -186,10 +186,22 @@ namespace EverFight
         {
             //TODO: Change for p1 vs p2
 
-            position = new Vector2(windowSize.X - (windowSize.X / 4), -200);
-            weapon.position = position + new Vector2(-25, 50);
-            weapon.movingRight = false;
-            hasDied = true;
+            if (playerNumber == 1)
+            {
+                position = new Vector2((windowSize.X / 4), -100);
+                weapon.position = position + new Vector2(50, 50);
+                weapon.movingRight = true;
+                hasDied = true;
+
+            }
+            else if (playerNumber == 2)
+            {
+                position = new Vector2(windowSize.X - (windowSize.X / 4), -100);
+                weapon.position = position + new Vector2(-25, 50);
+                weapon.movingRight = false;
+                hasDied = true;
+            }
+            
 
         }
 

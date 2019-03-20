@@ -14,29 +14,32 @@ namespace EverFight
         int level;
         public List<Platform> platforms;
         Texture2D platformTexture;
+        Vector2 windowSize;
 
-        public Level(int lev, Texture2D pTex)
+        public Level(int lev, Texture2D pTex, Vector2 ws)
         {
             level = lev;
             platforms = new List<Platform>();
             platformTexture = pTex;
+            windowSize = ws;
 
             if (level == 0)
             {
-                platforms.Add(new Platform(new Vector2(100, 400), new Vector2(19, 1), platformTexture));
+                platforms.Add(new Platform(new Vector2(windowSize.X - 320, windowSize.Y - 150), new Vector2(8, 1), platformTexture));
                
             }
             if (level == 1)
             {
-                platforms.Add(new Platform(new Vector2(100, 550), new Vector2(10,3), platformTexture));
+                platforms.Add(new Platform(new Vector2(0, windowSize.Y - 150), new Vector2(32,3), platformTexture));
             }
             if (level == 2)
             {
-                platforms.Add(new Platform(new Vector2(200, 200), new Vector2(3, 1), platformTexture));
+                platforms.Add(new Platform(new Vector2(0, windowSize.Y - 150), new Vector2(8, 1), platformTexture));
             }
 
 
-           
+
+
         }
 
         public void Draw(SpriteBatch sb)
