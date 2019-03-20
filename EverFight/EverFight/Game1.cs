@@ -46,6 +46,15 @@ namespace EverFight
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            //makes sure the screen is always the same size
+            graphics.PreferredBackBufferHeight = 800;
+            graphics.PreferredBackBufferWidth = 1200;
+
+            if (graphics.IsFullScreen)
+            {
+                graphics.ToggleFullScreen();
+            }
         }
 
         /// <summary>
