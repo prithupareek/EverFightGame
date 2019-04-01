@@ -49,7 +49,9 @@ namespace EverFight
 
             //makes sure the screen is always the same size
             graphics.PreferredBackBufferHeight = 800;
-            graphics.PreferredBackBufferWidth = 1200;
+            graphics.PreferredBackBufferWidth = 1280;
+
+            //Debug.WriteLine(graphics.PreferredBackBufferHeight + ", " + graphics.PreferredBackBufferWidth);
 
             if (graphics.IsFullScreen)
             {
