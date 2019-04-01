@@ -42,6 +42,13 @@ namespace EverFight
 
         LevelManager levelManager;
 
+        enum GameMode
+        {
+            splashScreen, menu, playing, paused, p1Win, p2Win
+        }
+
+        GameMode mode;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -111,6 +118,7 @@ namespace EverFight
             levelManager = new LevelManager(windowSize);
             levelManager.LoadLevel(Content);
 
+            mode = GameMode.splashScreen;
 
         }
 
@@ -131,7 +139,31 @@ namespace EverFight
         protected override void Update(GameTime gameTime)
         {
             // TODO: Add your update logic here
-            
+
+            switch (mode)
+            {
+                case GameMode.splashScreen:
+                    break;
+
+                case GameMode.menu:
+                    break;
+
+                case GameMode.playing:
+                    break;
+
+                case GameMode.paused:
+                    break;
+
+                case GameMode.p1Win:
+                    break;
+
+                case GameMode.p2Win:
+                    break;
+
+                default:
+                    break;
+            }
+
             // Allows the game to exit
             if (Keyboard.GetState().IsKeyDown(Keys.Q))
             {
@@ -151,16 +183,16 @@ namespace EverFight
                 p1.weapon.projectiles.Add(new Projectile(p1.weapon.position, 1, p1.weapon.rotation, windowSize, bulletTexture, p1.spriteTexture, p1.weapon.movingRight));
             }
             if (Keyboard.GetState().IsKeyDown(Keys.K) && pastKey.IsKeyUp(Keys.K))   //p2
-            { 
+            {
                 p2.weapon.projectiles.Add(new Projectile(p2.weapon.position, 2, p2.weapon.rotation, windowSize, bulletTexture, p2.spriteTexture, p2.weapon.movingRight));
             }
 
             pastKey = Keyboard.GetState();
 
             //delete the bullets if they hit the ground
-            for (int i=0; i<p1.weapon.projectiles.Count; i++)
+            for (int i = 0; i < p1.weapon.projectiles.Count; i++)
             {
-                if (p1.weapon.projectiles[i].position.Y >= windowSize.Y - bulletTexture.Height*0.1)
+                if (p1.weapon.projectiles[i].position.Y >= windowSize.Y - bulletTexture.Height * 0.1)
                 {
                     p1.weapon.projectiles.RemoveAt(i);
                 }
@@ -238,7 +270,7 @@ namespace EverFight
             }
 
             //player reaches endzone of current level
-            if (p1.position.X>= windowSize.X - p1.spriteTexture.Width)
+            if (p1.position.X >= windowSize.X - p1.spriteTexture.Width)
             {
                 if (p2.hasDied)
                 {
@@ -290,7 +322,32 @@ namespace EverFight
         protected override void Draw(GameTime gameTime)
         {
 
-                GraphicsDevice.Clear(Color.Azure);
+            switch (mode)
+            {
+                case GameMode.splashScreen:
+                    GraphicsDevice.Clear(Color.Azure);
+                    break;
+
+                case GameMode.menu:
+                    GraphicsDevice.Clear(Color.Crimson);
+                    break;
+
+                case GameMode.playing:
+                    break;
+
+                case GameMode.paused:
+                    break;
+
+                case GameMode.p1Win:
+                    break;
+
+                case GameMode.p2Win:
+                    break;
+
+                default:
+                    break;
+            }
+
 
             if (levelManager.activeLevel > -1 && levelManager.activeLevel < 3)
             {
@@ -299,24 +356,24 @@ namespace EverFight
                 p2.Draw(spriteBatch);
             }
 
-                foreach (Projectile projectile in p1.weapon.projectiles) projectile.Draw(spriteBatch);
-                foreach (Projectile projectile in p2.weapon.projectiles) projectile.Draw(spriteBatch);
+            foreach (Projectile projectile in p1.weapon.projectiles) projectile.Draw(spriteBatch);
+            foreach (Projectile projectile in p2.weapon.projectiles) projectile.Draw(spriteBatch);
 
-                //Game Over Scenario
-                if (p2.hasDied && levelManager.activeLevel<3)
-                {
-                    spriteBatch.Begin();
-                    spriteBatch.Draw(arrow, new Vector2(windowSize.X - 100 - arrow.Width, 100), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.FlipHorizontally, 0f);
-                    spriteBatch.End();
-                }
-                else if (p1.hasDied && levelManager.activeLevel>-1)
-                {
-                    spriteBatch.Begin();
-                    spriteBatch.Draw(arrow, new Vector2(100, 100), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-                    spriteBatch.End();
-                }
+            //Game Over Scenario
+            if (p2.hasDied && levelManager.activeLevel < 3)
+            {
+                spriteBatch.Begin();
+                spriteBatch.Draw(arrow, new Vector2(windowSize.X - 100 - arrow.Width, 100), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.FlipHorizontally, 0f);
+                spriteBatch.End();
+            }
+            else if (p1.hasDied && levelManager.activeLevel > -1)
+            {
+                spriteBatch.Begin();
+                spriteBatch.Draw(arrow, new Vector2(100, 100), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                spriteBatch.End();
+            }
 
-                levelManager.DrawLevel(spriteBatch);
+            levelManager.DrawLevel(spriteBatch);
 
             base.Draw(gameTime);
         }
