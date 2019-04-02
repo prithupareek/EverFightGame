@@ -38,6 +38,8 @@ namespace EverFight
         int p1DelayCounter;
         int p2DelayCounter;
 
+        int splashDelayCounter;
+
         Texture2D arrow;
 
         LevelManager levelManager;
@@ -48,6 +50,13 @@ namespace EverFight
         }
 
         GameMode mode;
+
+        public enum ButtonType
+        {
+            START, RESTART, LEFT_ARROW, RIGHT_ARROW, UP_ARROW, QUIT
+        }
+
+        //TODO: Work on enum stuff...
 
         public Game1()
         {
@@ -120,6 +129,8 @@ namespace EverFight
 
             mode = GameMode.splashScreen;
 
+            splashDelayCounter = 0;
+
         }
 
         /// <summary>
@@ -143,21 +154,184 @@ namespace EverFight
             switch (mode)
             {
                 case GameMode.splashScreen:
+                    if (splashDelayCounter < 200)
+                    {
+                        splashDelayCounter++;
+                    }
+                    else
+                    {
+                        mode = GameMode.menu;
+                    }
                     break;
 
                 case GameMode.menu:
-                    break;
-
-                case GameMode.playing:
+                    //Do something here
                     break;
 
                 case GameMode.paused:
+                    //Do something here
+                    break;
+
+                case GameMode.playing:
+                    //platform update
+                    if (levelManager.activeLevel < 3 && levelManager.activeLevel > -1)
+                    {
+                        p1.Update(levelManager.levels[levelManager.activeLevel].platforms);
+                        p2.Update(levelManager.levels[levelManager.activeLevel].platforms);
+                    }
+
+                    //on keypress for bullets
+                    if (Keyboard.GetState().IsKeyDown(Keys.V) && pastKey.IsKeyUp(Keys.V))   //p1
+                    {
+
+                        p1.weapon.projectiles.Add(new Projectile(p1.weapon.position, 1, p1.weapon.rotation, windowSize, bulletTexture, p1.spriteTexture, p1.weapon.movingRight));
+                    }
+                    if (Keyboard.GetState().IsKeyDown(Keys.K) && pastKey.IsKeyUp(Keys.K))   //p2
+                    {
+                        p2.weapon.projectiles.Add(new Projectile(p2.weapon.position, 2, p2.weapon.rotation, windowSize, bulletTexture, p2.spriteTexture, p2.weapon.movingRight));
+                    }
+
+                    pastKey = Keyboard.GetState();
+
+                    //delete the bullets if they hit the ground
+                    for (int i = 0; i < p1.weapon.projectiles.Count; i++)
+                    {
+                        if (p1.weapon.projectiles[i].position.Y >= windowSize.Y - bulletTexture.Height * 0.1)
+                        {
+                            p1.weapon.projectiles.RemoveAt(i);
+                        }
+                    }
+                    for (int i = 0; i < p2.weapon.projectiles.Count; i++)
+                    {
+                        if (p2.weapon.projectiles[i].position.Y >= windowSize.Y - bulletTexture.Height * 0.1)
+                        {
+                            p2.weapon.projectiles.RemoveAt(i);
+                        }
+                    }
+
+                    //update the bullets
+                    foreach (Projectile projectile in p1.weapon.projectiles) projectile.Update();
+                    foreach (Projectile projectile in p2.weapon.projectiles) projectile.Update();
+
+
+
+                    //projectile - player collision detection
+                    foreach (Projectile projectile in p1.weapon.projectiles)
+                    {
+                        if (projectile.boundingBox.Intersects(p2.boundingBox))
+                        {
+                            p1.weapon.projectiles.Remove(projectile);
+
+                            p2.Respawn();
+
+                            p2DelayCounter = 0;
+
+                            p1.hasDied = false;
+
+
+                            break;
+                        }
+                    }
+                    foreach (Projectile projectile in p2.weapon.projectiles)
+                    {
+                        if (projectile.boundingBox.Intersects(p1.boundingBox))
+                        {
+                            p2.weapon.projectiles.Remove(projectile);
+
+
+                            p1.Respawn();
+
+                            p1DelayCounter = 0;
+
+                            p2.hasDied = false;
+
+                            break;
+                        }
+                    }
+
+
+                    //respawn timer
+                    if (p2.position.Y < 0 && p2.hasDied)
+                    {
+                        p2DelayCounter++;
+                    }
+                    if (p1.position.Y < 0 && p1.hasDied)
+                    {
+                        p1DelayCounter++;
+                    }
+
+                    if (p1DelayCounter == 200)
+                    {
+                        p1DelayCounter = 0;
+                        p1.velocity.Y = 0;
+                        p1.hasJumped = true;
+                    }
+                    if (p2DelayCounter == 200)
+                    {
+                        p2DelayCounter = 0;
+                        p2.velocity.Y = 0;
+                        p2.hasJumped = true;
+                    }
+
+                    //player reaches endzone of current level
+                    if (p1.position.X >= windowSize.X - p1.spriteTexture.Width)
+                    {
+                        if (p2.hasDied)
+                        {
+                            p1.position.X = 0;
+                            p2.Respawn();
+                            levelManager.activeLevel++;
+                        }
+                        else
+                        {
+                            p1.position.X = windowSize.X - p1.spriteTexture.Width;
+                        }
+                    }
+                    if (p1.position.X <= 0)
+                    {
+                        p1.position.X = 0;
+                    }
+                    if (p2.position.X <= 0)
+                    {
+                        if (p1.hasDied)
+                        {
+                            p2.position.X = windowSize.X - p2.spriteTexture.Width;
+                            p1.Respawn();
+                            levelManager.activeLevel--;
+                        }
+                        else
+                        {
+                            p2.position.X = 0;
+                        }
+                    }
+                    if (p2.position.X >= windowSize.X - p2.spriteTexture.Width)
+                    {
+                        p2.position.X = windowSize.X - p2.spriteTexture.Width;
+                    }
+
+                    //Game Over Scenario
+                    if (p2.hasDied && levelManager.activeLevel < 3)
+                    {
+                        mode = GameMode.p1Win;
+                    }
+                    else if (p1.hasDied && levelManager.activeLevel > -1)
+                    {
+                        mode = GameMode.p2Win;
+                    }
+
+                    //pause game
+                    if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                    {
+                        mode = GameMode.paused;
+                    }
                     break;
 
                 case GameMode.p1Win:
+                    //Do something here
                     break;
 
                 case GameMode.p2Win:
+                    //Do something here
                     break;
 
                 default:
@@ -170,147 +344,6 @@ namespace EverFight
                 this.Exit();
             }
 
-            if (levelManager.activeLevel < 3 && levelManager.activeLevel > -1)
-            {
-                p1.Update(levelManager.levels[levelManager.activeLevel].platforms);
-                p2.Update(levelManager.levels[levelManager.activeLevel].platforms);
-            }
-
-            //on keypress for bullets
-            if (Keyboard.GetState().IsKeyDown(Keys.V) && pastKey.IsKeyUp(Keys.V))   //p1
-            {
-
-                p1.weapon.projectiles.Add(new Projectile(p1.weapon.position, 1, p1.weapon.rotation, windowSize, bulletTexture, p1.spriteTexture, p1.weapon.movingRight));
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.K) && pastKey.IsKeyUp(Keys.K))   //p2
-            {
-                p2.weapon.projectiles.Add(new Projectile(p2.weapon.position, 2, p2.weapon.rotation, windowSize, bulletTexture, p2.spriteTexture, p2.weapon.movingRight));
-            }
-
-            pastKey = Keyboard.GetState();
-
-            //delete the bullets if they hit the ground
-            for (int i = 0; i < p1.weapon.projectiles.Count; i++)
-            {
-                if (p1.weapon.projectiles[i].position.Y >= windowSize.Y - bulletTexture.Height * 0.1)
-                {
-                    p1.weapon.projectiles.RemoveAt(i);
-                }
-            }
-            for (int i = 0; i < p2.weapon.projectiles.Count; i++)
-            {
-                if (p2.weapon.projectiles[i].position.Y >= windowSize.Y - bulletTexture.Height * 0.1)
-                {
-                    p2.weapon.projectiles.RemoveAt(i);
-                }
-            }
-
-            //update the bullets
-            foreach (Projectile projectile in p1.weapon.projectiles) projectile.Update();
-            foreach (Projectile projectile in p2.weapon.projectiles) projectile.Update();
-
-
-
-            //projectile - player collision detection
-            foreach (Projectile projectile in p1.weapon.projectiles)
-            {
-                if (projectile.boundingBox.Intersects(p2.boundingBox))
-                {
-                    p1.weapon.projectiles.Remove(projectile);
-
-                    p2.Respawn();
-
-                    p2DelayCounter = 0;
-
-                    p1.hasDied = false;
-
-
-                    break;
-                }
-            }
-            foreach (Projectile projectile in p2.weapon.projectiles)
-            {
-                if (projectile.boundingBox.Intersects(p1.boundingBox))
-                {
-                    p2.weapon.projectiles.Remove(projectile);
-
-
-                    p1.Respawn();
-
-                    p1DelayCounter = 0;
-
-                    p2.hasDied = false;
-
-                    break;
-                }
-            }
-
-
-            //respawn timer
-            if (p2.position.Y < 0 && p2.hasDied)
-            {
-                p2DelayCounter++;
-            }
-            if (p1.position.Y < 0 && p1.hasDied)
-            {
-                p1DelayCounter++;
-            }
-
-            if (p1DelayCounter == 200)
-            {
-                p1DelayCounter = 0;
-                p1.velocity.Y = 0;
-                p1.hasJumped = true;
-            }
-            if (p2DelayCounter == 200)
-            {
-                p2DelayCounter = 0;
-                p2.velocity.Y = 0;
-                p2.hasJumped = true;
-            }
-
-            //player reaches endzone of current level
-            if (p1.position.X >= windowSize.X - p1.spriteTexture.Width)
-            {
-                if (p2.hasDied)
-                {
-                    p1.position.X = 0;
-                    p2.Respawn();
-                    levelManager.activeLevel++;
-                }
-                else
-                {
-                    p1.position.X = windowSize.X - p1.spriteTexture.Width;
-                }
-            }
-            if (p1.position.X <= 0)
-            {
-                p1.position.X = 0;
-            }
-            if (p2.position.X <= 0)
-            {
-                if (p1.hasDied)
-                {
-                    p2.position.X = windowSize.X - p2.spriteTexture.Width;
-                    p1.Respawn();
-                    levelManager.activeLevel--;
-                }
-                else
-                {
-                    p2.position.X = 0;
-                }
-            }
-            if (p2.position.X >= windowSize.X - p2.spriteTexture.Width)
-            {
-                p2.position.X = windowSize.X - p2.spriteTexture.Width;
-            }
-
-
-            ////check if players intersect each other
-            //if (p1.playerWeaponBox.Intersects(p2.playerWeaponBox))
-            //{
-            //    Debug.WriteLine("Hit");
-            //}
 
             base.Update(gameTime);
         }
@@ -330,50 +363,47 @@ namespace EverFight
 
                 case GameMode.menu:
                     GraphicsDevice.Clear(Color.Crimson);
+
                     break;
 
                 case GameMode.playing:
+
+                    if (levelManager.activeLevel > -1 && levelManager.activeLevel < 3)
+                    {
+                        // TODO: Add your drawing code here
+                        p1.Draw(spriteBatch);
+                        p2.Draw(spriteBatch);
+                    }
+
+                    foreach (Projectile projectile in p1.weapon.projectiles) projectile.Draw(spriteBatch);
+                    foreach (Projectile projectile in p2.weapon.projectiles) projectile.Draw(spriteBatch);
+
+                    levelManager.DrawLevel(spriteBatch);
+
                     break;
 
                 case GameMode.paused:
+                    GraphicsDevice.Clear(Color.ForestGreen);
+
                     break;
 
                 case GameMode.p1Win:
+
+                    spriteBatch.Begin();
+                    spriteBatch.Draw(arrow, new Vector2(windowSize.X - 100 - arrow.Width, 100), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.FlipHorizontally, 0f);
+                    spriteBatch.End();
                     break;
 
                 case GameMode.p2Win:
+
+                    spriteBatch.Begin();
+                    spriteBatch.Draw(arrow, new Vector2(100, 100), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                    spriteBatch.End();
                     break;
 
                 default:
                     break;
             }
-
-
-            if (levelManager.activeLevel > -1 && levelManager.activeLevel < 3)
-            {
-                // TODO: Add your drawing code here
-                p1.Draw(spriteBatch);
-                p2.Draw(spriteBatch);
-            }
-
-            foreach (Projectile projectile in p1.weapon.projectiles) projectile.Draw(spriteBatch);
-            foreach (Projectile projectile in p2.weapon.projectiles) projectile.Draw(spriteBatch);
-
-            //Game Over Scenario
-            if (p2.hasDied && levelManager.activeLevel < 3)
-            {
-                spriteBatch.Begin();
-                spriteBatch.Draw(arrow, new Vector2(windowSize.X - 100 - arrow.Width, 100), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.FlipHorizontally, 0f);
-                spriteBatch.End();
-            }
-            else if (p1.hasDied && levelManager.activeLevel > -1)
-            {
-                spriteBatch.Begin();
-                spriteBatch.Draw(arrow, new Vector2(100, 100), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-                spriteBatch.End();
-            }
-
-            levelManager.DrawLevel(spriteBatch);
 
             base.Draw(gameTime);
         }
