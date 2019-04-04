@@ -56,6 +56,7 @@ namespace EverFight
             START, RESTART, LEFT_ARROW, RIGHT_ARROW, UP_ARROW, QUIT
         }
 
+
         //TODO: Work on enum stuff...
 
         public Game1()
@@ -367,6 +368,8 @@ namespace EverFight
                     break;
 
                 case GameMode.playing:
+
+                    GraphicsDevice.Clear(Color.CornflowerBlue);
 
                     if (levelManager.activeLevel > -1 && levelManager.activeLevel < 3)
                     {

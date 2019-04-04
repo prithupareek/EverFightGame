@@ -10,7 +10,7 @@ namespace EverFight
     class Button
     {
 
-        public Button(Vector2 pos, ButtonType type)
+        public Button(Vector2 pos)
         {
 
         }
