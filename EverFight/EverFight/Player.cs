@@ -28,6 +28,7 @@ namespace EverFight
         public BoundingBox boundingBox;
         public Boolean hasDied;
         public Weapon weapon;
+        public GamePadState pastButton;
 
 
 
@@ -75,19 +76,19 @@ namespace EverFight
 
             if (playerNumber == 1)
             {
-                if (keys.IsKeyDown(Keys.D)) //right
+                if (keys.IsKeyDown(Keys.D) || GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X>0) //right
                 {
                     weapon.movingRight = true;
                     weapon.position.X = position.X + 50;
                     position.X+= 3f;
                 }
-                if (keys.IsKeyDown(Keys.A)) //left
+                if (keys.IsKeyDown(Keys.A) || GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X < 0) //left
                 {
                     weapon.movingRight = false;
                     weapon.position.X = position.X - 25;
                     position.X-= 3f;
                 }
-                if (keys.IsKeyDown(Keys.B) && hasJumped == false)   //jump
+                if ((keys.IsKeyDown(Keys.B) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A)) && hasJumped == false)   //jump
                 {
                     position.Y -= 10f;
                     velocity.Y = -10f;
@@ -99,19 +100,19 @@ namespace EverFight
             }
             else if (playerNumber == 2)
             {
-                if (keys.IsKeyDown(Keys.Right)) //right
+                if (keys.IsKeyDown(Keys.Right) || GamePad.GetState(PlayerIndex.Two).ThumbSticks.Left.X > 0) //right
                 {
                     weapon.movingRight = true;
                     weapon.position.X = position.X + 50;
                     position.X+= 3f;
                 }
-                if (keys.IsKeyDown(Keys.Left)) //left
+                if (keys.IsKeyDown(Keys.Left) || GamePad.GetState(PlayerIndex.Two).ThumbSticks.Left.X < 0) //left
                 {
                     weapon.movingRight = false;
                     weapon.position.X = position.X - 25;
                     position.X-= 3f;
                 }
-                if (keys.IsKeyDown(Keys.L) && hasJumped == false)   //jump
+                if ((keys.IsKeyDown(Keys.L) || GamePad.GetState(PlayerIndex.Two).IsButtonDown(Buttons.A)) && hasJumped == false)   //jump
                 {
                     position.Y -= 10f;
                     velocity.Y = -10f;

@@ -31,6 +31,7 @@ namespace EverFight
 
         //pastkey for bullets firing
         KeyboardState pastKey;
+        
 
         //Delay respawnDelay1;
         //Delay respawnDelay2;
@@ -167,6 +168,12 @@ namespace EverFight
 
                 case GameMode.menu:
                     //Do something here
+
+                    //testing code
+                    if (Keyboard.GetState().IsKeyDown(Keys.T) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A))
+                    {
+                        mode = GameMode.playing;
+                    }
                     break;
 
                 case GameMode.paused:
@@ -182,17 +189,20 @@ namespace EverFight
                     }
 
                     //on keypress for bullets
-                    if (Keyboard.GetState().IsKeyDown(Keys.V) && pastKey.IsKeyUp(Keys.V))   //p1
+                    if ((Keyboard.GetState().IsKeyDown(Keys.V) && pastKey.IsKeyUp(Keys.V)) || (GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.Y) && p1.pastButton.IsButtonUp(Buttons.Y)))   //p1
                     {
 
                         p1.weapon.projectiles.Add(new Projectile(p1.weapon.position, 1, p1.weapon.rotation, windowSize, bulletTexture, p1.spriteTexture, p1.weapon.movingRight));
                     }
-                    if (Keyboard.GetState().IsKeyDown(Keys.K) && pastKey.IsKeyUp(Keys.K))   //p2
+                    if (Keyboard.GetState().IsKeyDown(Keys.K) && pastKey.IsKeyUp(Keys.K) || (GamePad.GetState(PlayerIndex.Two).IsButtonDown(Buttons.Y) && p2.pastButton.IsButtonUp(Buttons.Y)))   //p2
                     {
                         p2.weapon.projectiles.Add(new Projectile(p2.weapon.position, 2, p2.weapon.rotation, windowSize, bulletTexture, p2.spriteTexture, p2.weapon.movingRight));
                     }
 
                     pastKey = Keyboard.GetState();
+                    p1.pastButton = GamePad.GetState(PlayerIndex.One);
+                    p2.pastButton = GamePad.GetState(PlayerIndex.Two);
+
 
                     //delete the bullets if they hit the ground
                     for (int i = 0; i < p1.weapon.projectiles.Count; i++)
@@ -321,7 +331,7 @@ namespace EverFight
                     }
 
                     //pause game
-                    if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                    if (Keyboard.GetState().IsKeyDown(Keys.Space) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.Start))
                     {
                         mode = GameMode.paused;
                     }
@@ -340,7 +350,7 @@ namespace EverFight
             }
 
             // Allows the game to exit
-            if (Keyboard.GetState().IsKeyDown(Keys.Q))
+            if (Keyboard.GetState().IsKeyDown(Keys.Q) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.Back))
             {
                 this.Exit();
             }
