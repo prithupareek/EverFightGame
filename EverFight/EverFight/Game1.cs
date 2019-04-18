@@ -54,9 +54,10 @@ namespace EverFight
 
         public enum ButtonType
         {
-            START, RESTART, LEFT_ARROW, RIGHT_ARROW, UP_ARROW, QUIT
+            START, RESTART, LEFT_ARROW, RIGHT_ARROW, UP_ARROW, QUIT, DOWN_ARROW
         }
 
+        Button startButton;
 
         //TODO: Work on enum stuff...
 
@@ -133,6 +134,10 @@ namespace EverFight
 
             splashDelayCounter = 0;
 
+            startButton = new Button(new Vector2(windowSize.X/2 - 125, 400), ButtonType.START);
+            //startButton.position.X -= startButton.buttonTexture.Width;
+            startButton.LoadContent(Content);
+
         }
 
         /// <summary>
@@ -168,6 +173,7 @@ namespace EverFight
 
                 case GameMode.menu:
                     //Do something here
+
 
                     //testing code
                     if (Keyboard.GetState().IsKeyDown(Keys.T) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A))
@@ -374,7 +380,7 @@ namespace EverFight
 
                 case GameMode.menu:
                     GraphicsDevice.Clear(Color.Crimson);
-
+                    startButton.Draw(spriteBatch);
                     break;
 
                 case GameMode.playing:
@@ -397,7 +403,7 @@ namespace EverFight
 
                 case GameMode.paused:
                     GraphicsDevice.Clear(Color.ForestGreen);
-
+                    
                     break;
 
                 case GameMode.p1Win:
