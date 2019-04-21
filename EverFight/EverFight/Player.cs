@@ -29,6 +29,7 @@ namespace EverFight
         public Boolean hasDied;
         public Weapon weapon;
         public GamePadState pastButton;
+        public Pointer pointer;
 
 
 
@@ -52,6 +53,7 @@ namespace EverFight
             }
 
             weapon = new Weapon(position, playerNumber);
+            pointer = new Pointer(playerNumber, windowSize);
         }
 
         //Load Content
@@ -222,5 +224,6 @@ namespace EverFight
             weapon.Draw(sb);
 
         }
+
     }
 }

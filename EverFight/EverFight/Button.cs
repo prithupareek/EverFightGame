@@ -17,6 +17,7 @@ namespace EverFight
         Game1.ButtonType buttonType;
         public Texture2D buttonTexture;
         Texture2D activeButtonTexture;
+        BoundingBox boundingBox;
 
         public Button(Vector2 pos, Game1.ButtonType type)
         {
@@ -56,6 +57,8 @@ namespace EverFight
 
         public void Update()
         {
+            boundingBox = new BoundingBox(new Vector3(position, 0), new Vector3(position.X + (buttonTexture.Width), position.Y + (buttonTexture.Height), 0));
+            
 
         }
 

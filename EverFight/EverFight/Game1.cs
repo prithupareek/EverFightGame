@@ -22,19 +22,11 @@ namespace EverFight
 
         Vector2 windowSize;
 
-        //arraylist to store bullets
-        //List<Projectile> p1.weapon.projectiles;
-        //List<Projectile> p2.weapon.projectiles;
-
         //bullets texture.. don't know if there is a better way to do this
         Texture2D bulletTexture;
 
         //pastkey for bullets firing
         KeyboardState pastKey;
-        
-
-        //Delay respawnDelay1;
-        //Delay respawnDelay2;
 
         int p1DelayCounter;
         int p2DelayCounter;
@@ -57,9 +49,7 @@ namespace EverFight
             START, RESTART, LEFT_ARROW, RIGHT_ARROW, UP_ARROW, QUIT, DOWN_ARROW
         }
 
-        Button startButton;
-
-        //TODO: Work on enum stuff...
+        List<Button> menuButtons;
 
         public Game1()
         {
@@ -109,9 +99,6 @@ namespace EverFight
             p1 = new Player(1, windowSize);
             p2 = new Player(2, windowSize);
 
-            // Constructors for the projectile arraylists
-            //p1.weapon.projectiles = new List<Projectile>();
-            //p2.weapon.projectiles = new List<Projectile>();
 
             // TODO: use this.Content to load your game content here
             p1.LoadContent(Content);
@@ -120,9 +107,6 @@ namespace EverFight
             //load content for the projectiles
             bulletTexture = Content.Load<Texture2D>("projectile");
 
-            //respawn delay
-            //respawnDelay1 = new Delay(5f);
-            //respawnDelay2 = new Delay(5f);
 
             //arrow sprite
             arrow = Content.Load<Texture2D>("arrow");
@@ -135,8 +119,10 @@ namespace EverFight
             splashDelayCounter = 0;
 
             startButton = new Button(new Vector2(windowSize.X/2 - 125, 400), ButtonType.START);
-            //startButton.position.X -= startButton.buttonTexture.Width;
             startButton.LoadContent(Content);
+
+            p1.pointer.LoadContent(Content);
+            p2.pointer.LoadContent(Content);
 
         }
 
@@ -180,6 +166,9 @@ namespace EverFight
                     {
                         mode = GameMode.playing;
                     }
+
+                    p1.pointer.Update();
+                    p2.pointer.Update();
                     break;
 
                 case GameMode.paused:
@@ -381,6 +370,8 @@ namespace EverFight
                 case GameMode.menu:
                     GraphicsDevice.Clear(Color.Crimson);
                     startButton.Draw(spriteBatch);
+                    p1.pointer.Draw(spriteBatch);
+                    p2.pointer.Draw(spriteBatch);
                     break;
 
                 case GameMode.playing:
