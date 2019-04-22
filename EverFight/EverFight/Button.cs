@@ -14,10 +14,10 @@ namespace EverFight
 
         //Properties
         public Vector2 position;
-        Game1.ButtonType buttonType;
+        public Game1.ButtonType buttonType;
         public Texture2D buttonTexture;
         Texture2D activeButtonTexture;
-        BoundingBox boundingBox;
+        public BoundingBox boundingBox;
 
         public Button(Vector2 pos, Game1.ButtonType type)
         {
@@ -53,12 +53,10 @@ namespace EverFight
 
 
             buttonTexture = cm.Load<Texture2D>(buttonName);
-        }
 
-        public void Update()
-        {
+            position.X -= buttonTexture.Width/2;
+
             boundingBox = new BoundingBox(new Vector3(position, 0), new Vector3(position.X + (buttonTexture.Width), position.Y + (buttonTexture.Height), 0));
-            
 
         }
 

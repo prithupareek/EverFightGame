@@ -118,11 +118,19 @@ namespace EverFight
 
             splashDelayCounter = 0;
 
-            startButton = new Button(new Vector2(windowSize.X/2 - 125, 400), ButtonType.START);
-            startButton.LoadContent(Content);
+            //startButton = new Button(new Vector2(windowSize.X/2 - 125, 400), ButtonType.START);
+            //startButton.LoadContent(Content);
 
             p1.pointer.LoadContent(Content);
             p2.pointer.LoadContent(Content);
+
+            menuButtons = new List<Button>();
+            menuButtons.Add(new Button(new Vector2 (windowSize.X/2, 300), ButtonType.START));
+
+            foreach(Button button in menuButtons)
+                    {
+                button.LoadContent(Content);
+            }
 
         }
 
@@ -161,14 +169,38 @@ namespace EverFight
                     //Do something here
 
 
-                    //testing code
-                    if (Keyboard.GetState().IsKeyDown(Keys.T) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A))
-                    {
-                        mode = GameMode.playing;
-                    }
+                    ////testing code
+                    ////if (Keyboard.GetState().IsKeyDown(Keys.T) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A))
+                    ////{
+                    ////    mode = GameMode.playing;
+                    ////}
 
                     p1.pointer.Update();
                     p2.pointer.Update();
+
+                    foreach (Button button in menuButtons)
+                    {
+                        if (p1.pointer.boundingBox.Intersects(button.boundingBox))
+                        {
+                            if (Keyboard.GetState().IsKeyDown(Keys.K) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A))
+                            {
+                                if (button.buttonType == ButtonType.START)
+                                {
+                                    mode = GameMode.playing;
+                                }
+                            }
+                        }
+                        if (p2.pointer.boundingBox.Intersects(button.boundingBox))
+                        {
+                            if (Keyboard.GetState().IsKeyDown(Keys.V) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A))
+                            {
+                                if (button.buttonType == ButtonType.START)
+                                {
+                                    mode = GameMode.playing;
+                                }
+                            }
+                        }
+                    }
                     break;
 
                 case GameMode.paused:
@@ -369,7 +401,12 @@ namespace EverFight
 
                 case GameMode.menu:
                     GraphicsDevice.Clear(Color.Crimson);
-                    startButton.Draw(spriteBatch);
+
+                    foreach (Button button in menuButtons)
+                    {
+                        button.Draw(spriteBatch);
+                    }
+
                     p1.pointer.Draw(spriteBatch);
                     p2.pointer.Draw(spriteBatch);
                     break;
