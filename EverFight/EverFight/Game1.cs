@@ -152,228 +152,228 @@ namespace EverFight
         {
             // TODO: Add your update logic here
 
-            switch (mode)
+            if (mode == GameMode.splashScreen)
             {
-                case GameMode.splashScreen:
-                    if (splashDelayCounter < 200)
+                if (splashDelayCounter < 200)
+                {
+                    splashDelayCounter++;
+                }
+                else
+                {
+                    mode = GameMode.menu;
+                }
+            }
+            else if (mode == GameMode.menu)
+            {
+                //Do something here
+
+
+                ////testing code
+                ////if (Keyboard.GetState().IsKeyDown(Keys.T) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A))
+                ////{
+                ////    mode = GameMode.playing;
+                ////}
+
+                p1.pointer.Update();
+                p2.pointer.Update();
+
+                foreach (Button button in menuButtons)
+                {
+                    if (p1.pointer.boundingBox.Intersects(button.boundingBox))
                     {
-                        splashDelayCounter++;
+
+                        if (Keyboard.GetState().IsKeyDown(Keys.B) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A))
+                        {
+                            if (button.buttonType == ButtonType.START)
+                            {
+                                mode = GameMode.playing;
+                            }
+                        }
+                    }
+                    if (p2.pointer.boundingBox.Intersects(button.boundingBox))
+                    {
+                        if (Keyboard.GetState().IsKeyDown(Keys.L) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A))
+                        {
+                            if (button.buttonType == ButtonType.START)
+                            {
+                                mode = GameMode.playing;
+                            }
+                        }
+                    }
+                }
+            }
+
+            else if (mode == GameMode.paused)
+            {
+                //Do something here
+            }
+            else if (mode == GameMode.playing)
+            {
+                //platform update
+                if (levelManager.activeLevel < 3 && levelManager.activeLevel > -1)
+                {
+                    p1.Update(levelManager.levels[levelManager.activeLevel].platforms);
+                    p2.Update(levelManager.levels[levelManager.activeLevel].platforms);
+                }
+
+                //on keypress for bullets
+                if ((Keyboard.GetState().IsKeyDown(Keys.V) && pastKey.IsKeyUp(Keys.V)) || (GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.Y) && p1.pastButton.IsButtonUp(Buttons.Y)))   //p1
+                {
+
+                    p1.weapon.projectiles.Add(new Projectile(p1.weapon.position, 1, p1.weapon.rotation, windowSize, bulletTexture, p1.spriteTexture, p1.weapon.movingRight));
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.K) && pastKey.IsKeyUp(Keys.K) || (GamePad.GetState(PlayerIndex.Two).IsButtonDown(Buttons.Y) && p2.pastButton.IsButtonUp(Buttons.Y)))   //p2
+                {
+                    p2.weapon.projectiles.Add(new Projectile(p2.weapon.position, 2, p2.weapon.rotation, windowSize, bulletTexture, p2.spriteTexture, p2.weapon.movingRight));
+                }
+
+                pastKey = Keyboard.GetState();
+                p1.pastButton = GamePad.GetState(PlayerIndex.One);
+                p2.pastButton = GamePad.GetState(PlayerIndex.Two);
+
+
+                //delete the bullets if they hit the ground
+                for (int i = 0; i < p1.weapon.projectiles.Count; i++)
+                {
+                    if (p1.weapon.projectiles[i].position.Y >= windowSize.Y - bulletTexture.Height * 0.1)
+                    {
+                        p1.weapon.projectiles.RemoveAt(i);
+                    }
+                }
+                for (int i = 0; i < p2.weapon.projectiles.Count; i++)
+                {
+                    if (p2.weapon.projectiles[i].position.Y >= windowSize.Y - bulletTexture.Height * 0.1)
+                    {
+                        p2.weapon.projectiles.RemoveAt(i);
+                    }
+                }
+
+                //update the bullets
+                foreach (Projectile projectile in p1.weapon.projectiles) projectile.Update();
+                foreach (Projectile projectile in p2.weapon.projectiles) projectile.Update();
+
+
+
+                //projectile - player collision detection
+                foreach (Projectile projectile in p1.weapon.projectiles)
+                {
+                    if (projectile.boundingBox.Intersects(p2.boundingBox))
+                    {
+                        p1.weapon.projectiles.Remove(projectile);
+
+                        p2.Respawn();
+
+                        p2DelayCounter = 0;
+
+                        p1.hasDied = false;
+
+                        Debug.WriteLine("Test");
+                        break;
+                    }
+                }
+                foreach (Projectile projectile in p2.weapon.projectiles)
+                {
+                    if (projectile.boundingBox.Intersects(p1.boundingBox))
+                    {
+                        p2.weapon.projectiles.Remove(projectile);
+
+
+                        p1.Respawn();
+
+                        p1DelayCounter = 0;
+
+                        p2.hasDied = false;
+
+                        break;
+                    }
+                }
+
+
+                //respawn timer
+                if (p2.position.Y < 0 && p2.hasDied)
+                {
+                    p2DelayCounter++;
+                }
+                if (p1.position.Y < 0 && p1.hasDied)
+                {
+                    p1DelayCounter++;
+                }
+
+                if (p1DelayCounter == 200)
+                {
+                    p1DelayCounter = 0;
+                    p1.velocity.Y = 0;
+                    p1.hasJumped = true;
+                }
+                if (p2DelayCounter == 200)
+                {
+                    p2DelayCounter = 0;
+                    p2.velocity.Y = 0;
+                    p2.hasJumped = true;
+                }
+
+                //player reaches endzone of current level
+                if (p1.position.X >= windowSize.X - p1.spriteTexture.Width)
+                {
+                    if (p2.hasDied)
+                    {
+                        p1.position.X = 0;
+                        p2.Respawn();
+                        levelManager.activeLevel++;
                     }
                     else
                     {
-                        mode = GameMode.menu;
+                        p1.position.X = windowSize.X - p1.spriteTexture.Width;
                     }
-                    break;
-
-                case GameMode.menu:
-                    //Do something here
-
-
-                    ////testing code
-                    ////if (Keyboard.GetState().IsKeyDown(Keys.T) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A))
-                    ////{
-                    ////    mode = GameMode.playing;
-                    ////}
-
-                    p1.pointer.Update();
-                    p2.pointer.Update();
-
-                    foreach (Button button in menuButtons)
-                    {
-                        if (p1.pointer.boundingBox.Intersects(button.boundingBox))
-                        {
-                            if (Keyboard.GetState().IsKeyDown(Keys.K) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A))
-                            {
-                                if (button.buttonType == ButtonType.START)
-                                {
-                                    mode = GameMode.playing;
-                                }
-                            }
-                        }
-                        if (p2.pointer.boundingBox.Intersects(button.boundingBox))
-                        {
-                            if (Keyboard.GetState().IsKeyDown(Keys.V) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A))
-                            {
-                                if (button.buttonType == ButtonType.START)
-                                {
-                                    mode = GameMode.playing;
-                                }
-                            }
-                        }
-                    }
-                    break;
-
-                case GameMode.paused:
-                    //Do something here
-                    break;
-
-                case GameMode.playing:
-                    //platform update
-                    if (levelManager.activeLevel < 3 && levelManager.activeLevel > -1)
-                    {
-                        p1.Update(levelManager.levels[levelManager.activeLevel].platforms);
-                        p2.Update(levelManager.levels[levelManager.activeLevel].platforms);
-                    }
-
-                    //on keypress for bullets
-                    if ((Keyboard.GetState().IsKeyDown(Keys.V) && pastKey.IsKeyUp(Keys.V)) || (GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.Y) && p1.pastButton.IsButtonUp(Buttons.Y)))   //p1
-                    {
-
-                        p1.weapon.projectiles.Add(new Projectile(p1.weapon.position, 1, p1.weapon.rotation, windowSize, bulletTexture, p1.spriteTexture, p1.weapon.movingRight));
-                    }
-                    if (Keyboard.GetState().IsKeyDown(Keys.K) && pastKey.IsKeyUp(Keys.K) || (GamePad.GetState(PlayerIndex.Two).IsButtonDown(Buttons.Y) && p2.pastButton.IsButtonUp(Buttons.Y)))   //p2
-                    {
-                        p2.weapon.projectiles.Add(new Projectile(p2.weapon.position, 2, p2.weapon.rotation, windowSize, bulletTexture, p2.spriteTexture, p2.weapon.movingRight));
-                    }
-
-                    pastKey = Keyboard.GetState();
-                    p1.pastButton = GamePad.GetState(PlayerIndex.One);
-                    p2.pastButton = GamePad.GetState(PlayerIndex.Two);
-
-
-                    //delete the bullets if they hit the ground
-                    for (int i = 0; i < p1.weapon.projectiles.Count; i++)
-                    {
-                        if (p1.weapon.projectiles[i].position.Y >= windowSize.Y - bulletTexture.Height * 0.1)
-                        {
-                            p1.weapon.projectiles.RemoveAt(i);
-                        }
-                    }
-                    for (int i = 0; i < p2.weapon.projectiles.Count; i++)
-                    {
-                        if (p2.weapon.projectiles[i].position.Y >= windowSize.Y - bulletTexture.Height * 0.1)
-                        {
-                            p2.weapon.projectiles.RemoveAt(i);
-                        }
-                    }
-
-                    //update the bullets
-                    foreach (Projectile projectile in p1.weapon.projectiles) projectile.Update();
-                    foreach (Projectile projectile in p2.weapon.projectiles) projectile.Update();
-
-
-
-                    //projectile - player collision detection
-                    foreach (Projectile projectile in p1.weapon.projectiles)
-                    {
-                        if (projectile.boundingBox.Intersects(p2.boundingBox))
-                        {
-                            p1.weapon.projectiles.Remove(projectile);
-
-                            p2.Respawn();
-
-                            p2DelayCounter = 0;
-
-                            p1.hasDied = false;
-
-
-                            break;
-                        }
-                    }
-                    foreach (Projectile projectile in p2.weapon.projectiles)
-                    {
-                        if (projectile.boundingBox.Intersects(p1.boundingBox))
-                        {
-                            p2.weapon.projectiles.Remove(projectile);
-
-
-                            p1.Respawn();
-
-                            p1DelayCounter = 0;
-
-                            p2.hasDied = false;
-
-                            break;
-                        }
-                    }
-
-
-                    //respawn timer
-                    if (p2.position.Y < 0 && p2.hasDied)
-                    {
-                        p2DelayCounter++;
-                    }
-                    if (p1.position.Y < 0 && p1.hasDied)
-                    {
-                        p1DelayCounter++;
-                    }
-
-                    if (p1DelayCounter == 200)
-                    {
-                        p1DelayCounter = 0;
-                        p1.velocity.Y = 0;
-                        p1.hasJumped = true;
-                    }
-                    if (p2DelayCounter == 200)
-                    {
-                        p2DelayCounter = 0;
-                        p2.velocity.Y = 0;
-                        p2.hasJumped = true;
-                    }
-
-                    //player reaches endzone of current level
-                    if (p1.position.X >= windowSize.X - p1.spriteTexture.Width)
-                    {
-                        if (p2.hasDied)
-                        {
-                            p1.position.X = 0;
-                            p2.Respawn();
-                            levelManager.activeLevel++;
-                        }
-                        else
-                        {
-                            p1.position.X = windowSize.X - p1.spriteTexture.Width;
-                        }
-                    }
-                    if (p1.position.X <= 0)
-                    {
-                        p1.position.X = 0;
-                    }
-                    if (p2.position.X <= 0)
-                    {
-                        if (p1.hasDied)
-                        {
-                            p2.position.X = windowSize.X - p2.spriteTexture.Width;
-                            p1.Respawn();
-                            levelManager.activeLevel--;
-                        }
-                        else
-                        {
-                            p2.position.X = 0;
-                        }
-                    }
-                    if (p2.position.X >= windowSize.X - p2.spriteTexture.Width)
+                }
+                if (p1.position.X <= 0)
+                {
+                    p1.position.X = 0;
+                }
+                if (p2.position.X <= 0)
+                {
+                    if (p1.hasDied)
                     {
                         p2.position.X = windowSize.X - p2.spriteTexture.Width;
+                        p1.Respawn();
+                        levelManager.activeLevel--;
                     }
-
-                    //Game Over Scenario
-                    if (p2.hasDied && levelManager.activeLevel < 3)
+                    else
                     {
-                        mode = GameMode.p1Win;
+                        p2.position.X = 0;
                     }
-                    else if (p1.hasDied && levelManager.activeLevel > -1)
-                    {
-                        mode = GameMode.p2Win;
-                    }
+                }
+                if (p2.position.X >= windowSize.X - p2.spriteTexture.Width)
+                {
+                    p2.position.X = windowSize.X - p2.spriteTexture.Width;
+                }
 
-                    //pause game
-                    if (Keyboard.GetState().IsKeyDown(Keys.Space) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.Start))
-                    {
-                        mode = GameMode.paused;
-                    }
-                    break;
+                //Game Over Scenario
+                if (p2.hasDied && levelManager.activeLevel < 3)
+                {
+                    mode = GameMode.p1Win;
+                }
+                else if (p1.hasDied && levelManager.activeLevel > -1)
+                {
+                    mode = GameMode.p2Win;
+                }
 
-                case GameMode.p1Win:
-                    //Do something here
-                    break;
-
-                case GameMode.p2Win:
-                    //Do something here
-                    break;
-
-                default:
-                    break;
+                //pause game
+                if (Keyboard.GetState().IsKeyDown(Keys.Space) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.Start))
+                {
+                    mode = GameMode.paused;
+                }
+            }
+            else if (mode == GameMode.p1Win)
+            {
+                //Do something here
+            }
+            else if (mode == GameMode.p2Win)
+            {
+                //Do something here
+            }
+            else
+            {
             }
 
             // Allows the game to exit
