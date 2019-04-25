@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Media;
 
 namespace EverFight
 {
@@ -54,6 +55,18 @@ namespace EverFight
 
         Texture2D p1Win;
         Texture2D p2Win;
+        Texture2D splashImage;
+        Texture2D backgroundImage;
+
+        Song menuBackgroundMusic;
+        Song gameplayBackgroundMusic;
+
+        enum MusicState
+        {
+            PLAYING, NOTPLAYING
+        }
+
+        MusicState musicState;
 
         public Game1()
         {
@@ -119,8 +132,14 @@ namespace EverFight
             p1Win = Content.Load<Texture2D>("p1Win");
             p2Win = Content.Load<Texture2D>("p2Win");
 
-            levelManager = new LevelManager(windowSize);
-            levelManager.LoadLevel(Content);
+            //splash image
+            splashImage = Content.Load<Texture2D>("splash");
+
+            //background image
+            backgroundImage = Content.Load<Texture2D>("cave-background");
+
+            levelManager = new LevelManager(windowSize, backgroundImage);
+            levelManager.LoadLevel(Content, 1);
 
             mode = GameMode.splashScreen;
 
@@ -147,6 +166,11 @@ namespace EverFight
             {
                 button.LoadContent(Content);
             }
+
+            //background music stuff
+            menuBackgroundMusic = Content.Load<Song>("warrior-song");
+            gameplayBackgroundMusic = Content.Load<Song>("gameplay-background-song");
+            musicState = MusicState.NOTPLAYING;
 
         }
 
@@ -182,6 +206,13 @@ namespace EverFight
             else if (mode == GameMode.menu)
             {
 
+                //background music
+                if (musicState == MusicState.NOTPLAYING)
+                {
+                    MediaPlayer.Play(menuBackgroundMusic);
+                    musicState = MusicState.PLAYING;
+                }
+
                 p1.pointer.Update();
                 p2.pointer.Update();
 
@@ -190,14 +221,14 @@ namespace EverFight
                     if (p1.pointer.boundingBox.Intersects(button.boundingBox))
                     {
 
-                        
-                            
-
                             if (Keyboard.GetState().IsKeyDown(Keys.B) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A))
                             {
                                 if (button.buttonType == ButtonType.START)
                                 {
                                     mode = GameMode.playing;
+                                    MediaPlayer.Stop();
+                                    musicState = MusicState.NOTPLAYING;
+
                                 }
                             }
                         
@@ -211,6 +242,9 @@ namespace EverFight
                             if (button.buttonType == ButtonType.START)
                             {
                                 mode = GameMode.playing;
+                                MediaPlayer.Stop();
+                                musicState = MusicState.NOTPLAYING;
+
                             }
                         }
                     }
@@ -240,13 +274,15 @@ namespace EverFight
                                 p2.pointer.position = new Vector2(windowSize.X - 100, 10);
 
                                 //restart the game
-                                levelManager = new LevelManager(windowSize);
-                                levelManager.LoadLevel(Content);
+                                levelManager = new LevelManager(windowSize, backgroundImage);
+                                levelManager.LoadLevel(Content, 1);
                                 p1.hasDied = false;
                                 p2.hasDied = false;
                                 p1.position = new Vector2(100, 10);
                                 p2.position = new Vector2(windowSize.X - 100, 10);
-                                
+                                MediaPlayer.Stop();
+                                musicState = MusicState.NOTPLAYING;
+
                             }
                         }
 
@@ -266,12 +302,14 @@ namespace EverFight
                                 p2.pointer.position = new Vector2(windowSize.X - 100, 10);
 
                                 //restart the game
-                                levelManager = new LevelManager(windowSize);
-                                levelManager.LoadLevel(Content);
+                                levelManager = new LevelManager(windowSize, backgroundImage);
+                                levelManager.LoadLevel(Content, 1);
                                 p1.hasDied = false;
                                 p2.hasDied = false;
                                 p1.position = new Vector2(100, 10);
                                 p2.position = new Vector2(windowSize.X - 100, 10);
+                                MediaPlayer.Stop();
+                                musicState = MusicState.NOTPLAYING;
                             }
                         }
                     }
@@ -279,6 +317,15 @@ namespace EverFight
             }
             else if (mode == GameMode.playing)
             {
+
+                //background music
+                if (musicState == MusicState.NOTPLAYING)
+                {
+                    MediaPlayer.Play(gameplayBackgroundMusic);
+                    musicState = MusicState.PLAYING;
+                }
+
+
                 //platform update
                 if (levelManager.activeLevel < 3 && levelManager.activeLevel > -1)
                 {
@@ -465,11 +512,17 @@ namespace EverFight
             switch (mode)
             {
                 case GameMode.splashScreen:
-                    GraphicsDevice.Clear(Color.Azure);
+                    GraphicsDevice.Clear(Color.Black);
+                    spriteBatch.Begin();
+                    spriteBatch.Draw(splashImage, new Vector2(windowSize.X / 2 - splashImage.Width / 2, windowSize.Y / 2 - splashImage.Height / 2));
+                    spriteBatch.End();
                     break;
 
                 case GameMode.menu:
                     GraphicsDevice.Clear(Color.Crimson);
+                    spriteBatch.Begin();
+                    spriteBatch.Draw(backgroundImage, new Vector2(0, 0));
+                    spriteBatch.End();
 
                     foreach (Button button in menuButtons)
                     {
@@ -484,6 +537,8 @@ namespace EverFight
 
                     GraphicsDevice.Clear(Color.CornflowerBlue);
 
+                    levelManager.DrawLevel(spriteBatch);
+
                     if (levelManager.activeLevel > -1 && levelManager.activeLevel < 3)
                     {
                         // TODO: Add your drawing code here
@@ -494,7 +549,7 @@ namespace EverFight
                     foreach (Projectile projectile in p1.weapon.projectiles) projectile.Draw(spriteBatch);
                     foreach (Projectile projectile in p2.weapon.projectiles) projectile.Draw(spriteBatch);
 
-                    levelManager.DrawLevel(spriteBatch);
+                    
 
                     if (p1.hasDied)
                     {
@@ -513,6 +568,9 @@ namespace EverFight
 
                 case GameMode.paused:
                     GraphicsDevice.Clear(Color.ForestGreen);
+                    spriteBatch.Begin();
+                    spriteBatch.Draw(backgroundImage, new Vector2(0, 0));
+                    spriteBatch.End();
 
                     foreach (Button button in pauseButtons) button.Draw(spriteBatch);
                     p1.pointer.Draw(spriteBatch);
@@ -522,6 +580,9 @@ namespace EverFight
 
                 case GameMode.p1Win:
                     GraphicsDevice.Clear(Color.White);
+                    spriteBatch.Begin();
+                    spriteBatch.Draw(backgroundImage, new Vector2(0, 0));
+                    spriteBatch.End();
 
                     spriteBatch.Begin();
                     spriteBatch.Draw(p1Win, new Vector2(100, 100));
@@ -531,6 +592,10 @@ namespace EverFight
 
                 case GameMode.p2Win:
                     GraphicsDevice.Clear(Color.White);
+                    spriteBatch.Begin();
+                    spriteBatch.Draw(backgroundImage, new Vector2(0, 0));
+                    spriteBatch.End();
+
                     spriteBatch.Begin();
                     spriteBatch.Draw(p2Win, new Vector2(windowSize.X - 100 - p2Win.Width, 100));
                     spriteBatch.End();

@@ -49,6 +49,18 @@
 /processorParam:TextureFormat=Color
 /build:black.jpg
 
+#begin cave-background.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:cave-background.png
+
 #begin down-arrow-button.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -60,6 +72,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:down-arrow-button.png
+
+#begin gameplay-background-song.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:gameplay-background-song.mp3
 
 #begin left-arrow-button.png
 /importer:TextureImporter
@@ -228,6 +246,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:up-arrow-button.png
+
+#begin warrior-song.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:warrior-song.mp3
 
 #begin watergun.png
 /importer:TextureImporter

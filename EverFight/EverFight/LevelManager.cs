@@ -15,25 +15,33 @@ namespace EverFight
         public List<Level> levels;
         public int activeLevel;
         Vector2 windowSize;
-        Texture2D p1Win;
-        Texture2D p2Win;
+        Texture2D levelBackground;
 
 
-        public LevelManager(Vector2 ws)
+        public LevelManager(Vector2 ws, Texture2D background)
         {
             levels = new List<Level>();
             activeLevel = 1;    //active level is set to the middle of the map
             windowSize = ws;
+            levelBackground = background;
 
         }
 
         //create the levels, load the win screen images
-        public void LoadLevel(ContentManager cm)
+        public void LoadLevel(ContentManager cm, int mainLevelNum)
         {
-            Texture2D platformTexture = cm.Load<Texture2D>("black");
-            levels.Add(new Level(0, platformTexture, windowSize));
-            levels.Add(new Level(1, platformTexture, windowSize));
-            levels.Add(new Level(2, platformTexture, windowSize));
+
+            if (mainLevelNum == 1)
+            {
+                Texture2D platformTexture = cm.Load<Texture2D>("black");
+                levels.Add(new Level(0, platformTexture, windowSize));
+                levels.Add(new Level(1, platformTexture, windowSize));
+                levels.Add(new Level(2, platformTexture, windowSize));
+            }
+            else if (mainLevelNum == 2)
+            {
+
+            }
 
             
 
@@ -56,6 +64,9 @@ namespace EverFight
             }
             else
             {
+                sb.Begin();
+                sb.Draw(levelBackground, new Vector2(0, 0));
+                sb.End();
                 levels[activeLevel].Draw(sb);
             }
         }
