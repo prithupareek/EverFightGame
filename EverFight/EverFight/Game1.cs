@@ -46,10 +46,14 @@ namespace EverFight
 
         public enum ButtonType
         {
-            START, RESTART, LEFT_ARROW, RIGHT_ARROW, UP_ARROW, QUIT, DOWN_ARROW
+            START, RESTART, LEFT_ARROW, RIGHT_ARROW, UP_ARROW, QUIT, DOWN_ARROW, MENU, PLAY
         }
 
         List<Button> menuButtons;
+        List<Button> pauseButtons;
+
+        Texture2D p1Win;
+        Texture2D p2Win;
 
         public Game1()
         {
@@ -109,7 +113,11 @@ namespace EverFight
 
 
             //arrow sprite
-            arrow = Content.Load<Texture2D>("arrow");
+            arrow = Content.Load<Texture2D>("arrow-indicator");
+
+            //win images
+            p1Win = Content.Load<Texture2D>("p1Win");
+            p2Win = Content.Load<Texture2D>("p2Win");
 
             levelManager = new LevelManager(windowSize);
             levelManager.LoadLevel(Content);
@@ -127,8 +135,16 @@ namespace EverFight
             menuButtons = new List<Button>();
             menuButtons.Add(new Button(new Vector2 (windowSize.X/2, 300), ButtonType.START));
 
-            foreach(Button button in menuButtons)
-                    {
+            foreach(Button button in menuButtons) {
+                button.LoadContent(Content);
+            }
+
+            pauseButtons = new List<Button>();
+            pauseButtons.Add(new Button(new Vector2(windowSize.X / 2, 300), ButtonType.MENU));
+            pauseButtons.Add(new Button(new Vector2(windowSize.X / 2, 500), ButtonType.PLAY));
+
+            foreach(Button button in pauseButtons)
+            {
                 button.LoadContent(Content);
             }
 
@@ -165,14 +181,6 @@ namespace EverFight
             }
             else if (mode == GameMode.menu)
             {
-                //Do something here
-
-
-                ////testing code
-                ////if (Keyboard.GetState().IsKeyDown(Keys.T) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A))
-                ////{
-                ////    mode = GameMode.playing;
-                ////}
 
                 p1.pointer.Update();
                 p2.pointer.Update();
@@ -182,16 +190,22 @@ namespace EverFight
                     if (p1.pointer.boundingBox.Intersects(button.boundingBox))
                     {
 
-                        if (Keyboard.GetState().IsKeyDown(Keys.B) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A))
-                        {
-                            if (button.buttonType == ButtonType.START)
+                        
+                            
+
+                            if (Keyboard.GetState().IsKeyDown(Keys.B) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A))
                             {
-                                mode = GameMode.playing;
+                                if (button.buttonType == ButtonType.START)
+                                {
+                                    mode = GameMode.playing;
+                                }
                             }
-                        }
+                        
                     }
                     if (p2.pointer.boundingBox.Intersects(button.boundingBox))
                     {
+                        
+
                         if (Keyboard.GetState().IsKeyDown(Keys.L) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A))
                         {
                             if (button.buttonType == ButtonType.START)
@@ -206,6 +220,62 @@ namespace EverFight
             else if (mode == GameMode.paused)
             {
                 //Do something here
+                p1.pointer.Update();
+                p2.pointer.Update();
+
+                foreach (Button button in pauseButtons)
+                {
+                    if (Keyboard.GetState().IsKeyDown(Keys.B) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A))
+                    {
+                        if (p1.pointer.boundingBox.Intersects(button.boundingBox))
+                        {
+                            if (button.buttonType == ButtonType.PLAY)
+                            {
+                                mode = GameMode.playing;
+                            }
+                            else if (button.buttonType == ButtonType.MENU)
+                            {
+                                mode = GameMode.menu;
+                                p1.pointer.position = new Vector2(100, 10);
+                                p2.pointer.position = new Vector2(windowSize.X - 100, 10);
+
+                                //restart the game
+                                levelManager = new LevelManager(windowSize);
+                                levelManager.LoadLevel(Content);
+                                p1.hasDied = false;
+                                p2.hasDied = false;
+                                p1.position = new Vector2(100, 10);
+                                p2.position = new Vector2(windowSize.X - 100, 10);
+                                
+                            }
+                        }
+
+                    }
+                    if (p2.pointer.boundingBox.Intersects(button.boundingBox))
+                    {
+                        if (Keyboard.GetState().IsKeyDown(Keys.L) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A))
+                        {
+                            if (button.buttonType == ButtonType.PLAY)
+                            {
+                                mode = GameMode.playing;
+                            }
+                            else if (button.buttonType == ButtonType.MENU)
+                            {
+                                mode = GameMode.menu;
+                                p1.pointer.position = new Vector2(100, 10);
+                                p2.pointer.position = new Vector2(windowSize.X - 100, 10);
+
+                                //restart the game
+                                levelManager = new LevelManager(windowSize);
+                                levelManager.LoadLevel(Content);
+                                p1.hasDied = false;
+                                p2.hasDied = false;
+                                p1.position = new Vector2(100, 10);
+                                p2.position = new Vector2(windowSize.X - 100, 10);
+                            }
+                        }
+                    }
+                }
             }
             else if (mode == GameMode.playing)
             {
@@ -267,7 +337,6 @@ namespace EverFight
 
                         p1.hasDied = false;
 
-                        Debug.WriteLine("Test");
                         break;
                     }
                 }
@@ -349,11 +418,11 @@ namespace EverFight
                 }
 
                 //Game Over Scenario
-                if (p2.hasDied && levelManager.activeLevel < 3)
+                if (p2.hasDied && levelManager.activeLevel > 2)
                 {
                     mode = GameMode.p1Win;
                 }
-                else if (p1.hasDied && levelManager.activeLevel > -1)
+                else if (p1.hasDied && levelManager.activeLevel < 0)
                 {
                     mode = GameMode.p2Win;
                 }
@@ -427,25 +496,45 @@ namespace EverFight
 
                     levelManager.DrawLevel(spriteBatch);
 
+                    if (p1.hasDied)
+                    {
+                        spriteBatch.Begin();
+                        spriteBatch.Draw(arrow, new Vector2(100, 100), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                        spriteBatch.End();
+                    }
+                    else if (p2.hasDied)
+                    {
+                        spriteBatch.Begin();
+                        spriteBatch.Draw(arrow, new Vector2(windowSize.X - 100 - arrow.Width, 100), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.FlipHorizontally, 0f);
+                        spriteBatch.End();
+                    }
+
                     break;
 
                 case GameMode.paused:
                     GraphicsDevice.Clear(Color.ForestGreen);
-                    
+
+                    foreach (Button button in pauseButtons) button.Draw(spriteBatch);
+                    p1.pointer.Draw(spriteBatch);
+                    p2.pointer.Draw(spriteBatch);
+
                     break;
 
                 case GameMode.p1Win:
+                    GraphicsDevice.Clear(Color.White);
 
                     spriteBatch.Begin();
-                    spriteBatch.Draw(arrow, new Vector2(windowSize.X - 100 - arrow.Width, 100), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.FlipHorizontally, 0f);
+                    spriteBatch.Draw(p1Win, new Vector2(100, 100));
                     spriteBatch.End();
+
                     break;
 
                 case GameMode.p2Win:
-
+                    GraphicsDevice.Clear(Color.White);
                     spriteBatch.Begin();
-                    spriteBatch.Draw(arrow, new Vector2(100, 100), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                    spriteBatch.Draw(p2Win, new Vector2(windowSize.X - 100 - p2Win.Width, 100));
                     spriteBatch.End();
+
                     break;
 
                 default:

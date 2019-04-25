@@ -25,6 +25,18 @@
 /processorParam:TextureFormat=Color
 /build:arrow.png
 
+#begin arrow-indicator.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:arrow-indicator.png
+
 #begin black.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -61,6 +73,18 @@
 /processorParam:TextureFormat=Color
 /build:left-arrow-button.png
 
+#begin menu-button.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:menu-button.png
+
 #begin p1Win.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -85,7 +109,7 @@
 /processorParam:TextureFormat=Color
 /build:p2Win.png
 
-#begin pointer.png
+#begin play-button.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -95,7 +119,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:pointer.png
+/build:play-button.png
 
 #begin pointer.png
 /importer:TextureImporter
@@ -145,6 +169,18 @@
 /processorParam:TextureFormat=Color
 /build:right-arrow-button.png
 
+#begin splash.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:splash.png
+
 #begin start-button.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -168,6 +204,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:sword.png
+
+#begin test-sprite.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:test-sprite.png
 
 #begin up-arrow-button.png
 /importer:TextureImporter

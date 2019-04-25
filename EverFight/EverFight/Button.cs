@@ -50,6 +50,15 @@ namespace EverFight
             {
                 buttonName = "down-arrow-button";
             }
+            else if (buttonType == Game1.ButtonType.MENU)
+            {
+                buttonName = "menu-button";
+            }
+            else if (buttonType == Game1.ButtonType.PLAY)
+            {
+                buttonName = "play-button";
+            }
+
 
 
             buttonTexture = cm.Load<Texture2D>(buttonName);
