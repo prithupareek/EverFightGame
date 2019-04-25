@@ -114,7 +114,7 @@ namespace EverFight
             levelManager = new LevelManager(windowSize);
             levelManager.LoadLevel(Content);
 
-            mode = GameMode.splashScreen;
+            mode = GameMode.playing;
 
             splashDelayCounter = 0;
 
@@ -152,63 +152,7 @@ namespace EverFight
         {
             // TODO: Add your update logic here
 
-            if (mode == GameMode.splashScreen)
-            {
-                if (splashDelayCounter < 200)
-                {
-                    splashDelayCounter++;
-                }
-                else
-                {
-                    mode = GameMode.menu;
-                }
-            }
-            else if (mode == GameMode.menu)
-            {
-                //Do something here
-
-
-                ////testing code
-                ////if (Keyboard.GetState().IsKeyDown(Keys.T) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A))
-                ////{
-                ////    mode = GameMode.playing;
-                ////}
-
-                p1.pointer.Update();
-                p2.pointer.Update();
-
-                foreach (Button button in menuButtons)
-                {
-                    if (p1.pointer.boundingBox.Intersects(button.boundingBox))
-                    {
-
-                        if (Keyboard.GetState().IsKeyDown(Keys.B) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A))
-                        {
-                            if (button.buttonType == ButtonType.START)
-                            {
-                                mode = GameMode.playing;
-                            }
-                        }
-                    }
-                    if (p2.pointer.boundingBox.Intersects(button.boundingBox))
-                    {
-                        if (Keyboard.GetState().IsKeyDown(Keys.L) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A))
-                        {
-                            if (button.buttonType == ButtonType.START)
-                            {
-                                mode = GameMode.playing;
-                            }
-                        }
-                    }
-                }
-            }
-
-            else if (mode == GameMode.paused)
-            {
-                //Do something here
-            }
-            else if (mode == GameMode.playing)
-            {
+           
                 //platform update
                 if (levelManager.activeLevel < 3 && levelManager.activeLevel > -1)
                 {
@@ -348,33 +292,23 @@ namespace EverFight
                     p2.position.X = windowSize.X - p2.spriteTexture.Width;
                 }
 
-                //Game Over Scenario
-                if (p2.hasDied && levelManager.activeLevel < 3)
-                {
-                    mode = GameMode.p1Win;
-                }
-                else if (p1.hasDied && levelManager.activeLevel > -1)
-                {
-                    mode = GameMode.p2Win;
-                }
+            //Game Over Scenario
+            if (p2.hasDied && levelManager.activeLevel >= 3)
+            {
 
-                //pause game
-                if (Keyboard.GetState().IsKeyDown(Keys.Space) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.Start))
+                mode = GameMode.p1Win;
+            }
+            else if (p1.hasDied && levelManager.activeLevel <= -1)
+            {
+                mode = GameMode.p2Win;
+            }
+
+            //pause game
+            if (Keyboard.GetState().IsKeyDown(Keys.Space) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.Start))
                 {
                     mode = GameMode.paused;
                 }
-            }
-            else if (mode == GameMode.p1Win)
-            {
-                //Do something here
-            }
-            else if (mode == GameMode.p2Win)
-            {
-                //Do something here
-            }
-            else
-            {
-            }
+           
 
             // Allows the game to exit
             if (Keyboard.GetState().IsKeyDown(Keys.Q) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.Back))
