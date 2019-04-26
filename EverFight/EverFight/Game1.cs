@@ -23,10 +23,8 @@ namespace EverFight
 
         Vector2 windowSize;
 
-        //bullets texture.. don't know if there is a better way to do this
         Texture2D bulletTexture;
 
-        //pastkey for bullets firing
         KeyboardState pastKey;
 
         int p1DelayCounter;
@@ -52,6 +50,7 @@ namespace EverFight
 
         List<Button> menuButtons;
         List<Button> pauseButtons;
+        Button winScreenRestartButton;
 
         Texture2D p1Win;
         Texture2D p2Win;
@@ -167,10 +166,14 @@ namespace EverFight
                 button.LoadContent(Content);
             }
 
+            winScreenRestartButton = new Button(new Vector2(windowSize.X / 2, 300), ButtonType.MENU);
+            winScreenRestartButton.LoadContent(Content);
+
             //background music stuff
             menuBackgroundMusic = Content.Load<Song>("warrior-song");
             gameplayBackgroundMusic = Content.Load<Song>("gameplay-background-song");
             musicState = MusicState.NOTPLAYING;
+
 
         }
 
@@ -237,7 +240,7 @@ namespace EverFight
                     {
                         
 
-                        if (Keyboard.GetState().IsKeyDown(Keys.L) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A))
+                        if (Keyboard.GetState().IsKeyDown(Keys.L) || GamePad.GetState(PlayerIndex.Two).IsButtonDown(Buttons.A))
                         {
                             if (button.buttonType == ButtonType.START)
                             {
@@ -289,7 +292,7 @@ namespace EverFight
                     }
                     if (p2.pointer.boundingBox.Intersects(button.boundingBox))
                     {
-                        if (Keyboard.GetState().IsKeyDown(Keys.L) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A))
+                        if (Keyboard.GetState().IsKeyDown(Keys.L) || GamePad.GetState(PlayerIndex.Two).IsButtonDown(Buttons.A))
                         {
                             if (button.buttonType == ButtonType.PLAY)
                             {
@@ -480,14 +483,59 @@ namespace EverFight
                     mode = GameMode.paused;
                 }
             }
-            else if (mode == GameMode.p1Win)
+            else if (mode == GameMode.p1Win || mode == GameMode.p2Win)
             {
                 //Do something here
+                if (Keyboard.GetState().IsKeyDown(Keys.B) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A))
+                {
+                    if (p1.pointer.boundingBox.Intersects(winScreenRestartButton.boundingBox))
+                    {
+
+                        if (winScreenRestartButton.buttonType == ButtonType.MENU)
+                        {
+                            mode = GameMode.menu;
+                            p1.pointer.position = new Vector2(100, 10);
+                            p2.pointer.position = new Vector2(windowSize.X - 100, 10);
+
+                            //restart the game
+                            levelManager = new LevelManager(windowSize, backgroundImage);
+                            levelManager.LoadLevel(Content, 1);
+                            p1.hasDied = false;
+                            p2.hasDied = false;
+                            p1.position = new Vector2(100, 10);
+                            p2.position = new Vector2(windowSize.X - 100, 10);
+                            MediaPlayer.Stop();
+                            musicState = MusicState.NOTPLAYING;
+
+                        }
+                    }
+
+                }
+                if (p2.pointer.boundingBox.Intersects(winScreenRestartButton.boundingBox))
+                {
+                    if (Keyboard.GetState().IsKeyDown(Keys.L) || GamePad.GetState(PlayerIndex.Two).IsButtonDown(Buttons.A))
+                    {
+
+                        if (winScreenRestartButton.buttonType == ButtonType.MENU)
+                        {
+                            mode = GameMode.menu;
+                            p1.pointer.position = new Vector2(100, 10);
+                            p2.pointer.position = new Vector2(windowSize.X - 100, 10);
+
+                            //restart the game
+                            levelManager = new LevelManager(windowSize, backgroundImage);
+                            levelManager.LoadLevel(Content, 1);
+                            p1.hasDied = false;
+                            p2.hasDied = false;
+                            p1.position = new Vector2(100, 10);
+                            p2.position = new Vector2(windowSize.X - 100, 10);
+                            MediaPlayer.Stop();
+                            musicState = MusicState.NOTPLAYING;
+                        }
+                    }
+                }
             }
-            else if (mode == GameMode.p2Win)
-            {
-                //Do something here
-            }
+ 
             else
             {
             }
@@ -585,7 +633,7 @@ namespace EverFight
                     spriteBatch.End();
 
                     spriteBatch.Begin();
-                    spriteBatch.Draw(p1Win, new Vector2(100, 100));
+                    spriteBatch.Draw(p1Win, new Vector2(windowSize.X/2 - p1Win.Width/2, 100));
                     spriteBatch.End();
 
                     break;
@@ -597,7 +645,7 @@ namespace EverFight
                     spriteBatch.End();
 
                     spriteBatch.Begin();
-                    spriteBatch.Draw(p2Win, new Vector2(windowSize.X - 100 - p2Win.Width, 100));
+                    spriteBatch.Draw(p2Win, new Vector2(windowSize.X / 2 - p1Win.Width / 2, 100));
                     spriteBatch.End();
 
                     break;

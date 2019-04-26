@@ -64,7 +64,7 @@ namespace EverFight
             //aim weapon
             if (playerNum == 1)
             {
-                if (keys.IsKeyDown(Keys.W))
+                if (keys.IsKeyDown(Keys.W) || GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y > 0)
                 {
                     if (movingRight)
                     {
@@ -76,7 +76,7 @@ namespace EverFight
 
                     }
                 }
-                if (keys.IsKeyDown(Keys.S))
+                if (keys.IsKeyDown(Keys.S) || GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y < 0)
                 {
                     if (movingRight)
                     {
@@ -96,7 +96,7 @@ namespace EverFight
                 {
                     rotationSpeed = 0;
                 }
-                if (keys.IsKeyUp(Keys.W) && keys.IsKeyUp(Keys.S))
+                if (keys.IsKeyUp(Keys.W) && keys.IsKeyUp(Keys.S) && Math.Abs(GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y) < 0.1)
                 {
                     if (rotation > 0)
                     {
@@ -116,7 +116,7 @@ namespace EverFight
             }
             else if (playerNum == 2)
             {
-                if (keys.IsKeyDown(Keys.Up))
+                if (keys.IsKeyDown(Keys.Up) || GamePad.GetState(PlayerIndex.Two).ThumbSticks.Left.Y > 0)
                 {
                     if (movingRight)
                     {
@@ -128,7 +128,7 @@ namespace EverFight
 
                     }
                 }
-                if (keys.IsKeyDown(Keys.Down))
+                if (keys.IsKeyDown(Keys.Down) || GamePad.GetState(PlayerIndex.Two).ThumbSticks.Left.Y < 0)
                 {
                     if (movingRight)
                     {
@@ -148,7 +148,7 @@ namespace EverFight
                 {
                     rotationSpeed = 0;
                 }
-                if (keys.IsKeyUp(Keys.Up) && keys.IsKeyUp(Keys.Down))
+                if (keys.IsKeyUp(Keys.Up) && keys.IsKeyUp(Keys.Down) && Math.Abs(GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y) < 0.1)
                 {
                     if (rotation > 0)
                     {
