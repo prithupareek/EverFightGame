@@ -23,6 +23,11 @@ namespace EverFight
             platformTexture = pTex;
             windowSize = ws;
 
+            if (level == 1)
+            {
+                
+            }
+
             //add the platforms to the level based on level
             if (level == 0)
             {

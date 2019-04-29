@@ -28,24 +28,15 @@ namespace EverFight
         }
 
         //create the levels, load the win screen images
-        public void LoadLevel(ContentManager cm, int mainLevelNum)
+        public void LoadLevel(ContentManager cm)
         {
 
-            if (mainLevelNum == 1)
-            {
                 Texture2D platformTexture = cm.Load<Texture2D>("black");
                 levels.Add(new Level(0, platformTexture, windowSize));
                 levels.Add(new Level(1, platformTexture, windowSize));
                 levels.Add(new Level(2, platformTexture, windowSize));
-            }
-            else if (mainLevelNum == 2)
-            {
-
-            }
 
             
-
-
         }
 
        

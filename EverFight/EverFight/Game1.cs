@@ -138,7 +138,7 @@ namespace EverFight
             backgroundImage = Content.Load<Texture2D>("cave-background");
 
             levelManager = new LevelManager(windowSize, backgroundImage);
-            levelManager.LoadLevel(Content, 1);
+            levelManager.LoadLevel(Content);
 
             mode = GameMode.splashScreen;
 
@@ -278,7 +278,7 @@ namespace EverFight
 
                                 //restart the game
                                 levelManager = new LevelManager(windowSize, backgroundImage);
-                                levelManager.LoadLevel(Content, 1);
+                                levelManager.LoadLevel(Content);
                                 p1.hasDied = false;
                                 p2.hasDied = false;
                                 p1.position = new Vector2(100, 10);
@@ -306,7 +306,7 @@ namespace EverFight
 
                                 //restart the game
                                 levelManager = new LevelManager(windowSize, backgroundImage);
-                                levelManager.LoadLevel(Content, 1);
+                                levelManager.LoadLevel(Content);
                                 p1.hasDied = false;
                                 p2.hasDied = false;
                                 p1.position = new Vector2(100, 10);
@@ -499,7 +499,7 @@ namespace EverFight
 
                             //restart the game
                             levelManager = new LevelManager(windowSize, backgroundImage);
-                            levelManager.LoadLevel(Content, 1);
+                            levelManager.LoadLevel(Content);
                             p1.hasDied = false;
                             p2.hasDied = false;
                             p1.position = new Vector2(100, 10);
@@ -524,7 +524,7 @@ namespace EverFight
 
                             //restart the game
                             levelManager = new LevelManager(windowSize, backgroundImage);
-                            levelManager.LoadLevel(Content, 1);
+                            levelManager.LoadLevel(Content);
                             p1.hasDied = false;
                             p2.hasDied = false;
                             p1.position = new Vector2(100, 10);
