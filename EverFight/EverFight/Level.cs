@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,6 +28,22 @@ namespace EverFight
             {
                 
             }
+
+
+            String input = File.ReadAllText(@"Content\level1.txt");
+            int i = 0, j = 0;
+
+            int[,] result = new int[32, 20];
+            foreach (var row in input.Split)
+
+            using (var stream = TitleContainer.OpenStream(path))
+
+            using (var reader = new StreamReader(stream))
+            {
+               
+                
+            }
+
 
             //add the platforms to the level based on level
             if (level == 0)
