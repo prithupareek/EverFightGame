@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace EverFight
 {
@@ -14,36 +15,62 @@ namespace EverFight
     {
         int level;
         public List<Platform> platforms;
-        Texture2D platformTexture;
+        Texture2D platform1, platform11, platform16, platform17, platformTexture;
         Vector2 windowSize;
 
-        public Level(int lev, Texture2D pTex, Vector2 ws)
+        public Level(int lev, Texture2D pTex, Vector2 ws, ContentManager cm)
         {
             level = lev;
             platforms = new List<Platform>();
             platformTexture = pTex;
             windowSize = ws;
 
-            if (level == 1)
-            {
-                
-            }
+            //Load all the Images
+            //platform1 = cm.Load<Texture2D>()
 
-
+            //parse the input tilemap file
             String input = File.ReadAllText(@"Content\level1.txt");
             int i = 0, j = 0;
 
-            int[,] result = new int[32, 20];
-            foreach (var row in input.Split)
-
-            using (var stream = TitleContainer.OpenStream(path))
-
-            using (var reader = new StreamReader(stream))
+            int[,] result = new int[20, 32];
+            foreach (var row in input.Split('\n'))
             {
-               
-                
+                j = 0;
+                foreach (var col in row.Trim().Split(' '))
+                {
+                    result[i, j] = int.Parse(col.Trim());
+                    j++;
+                }
+                i++;
             }
 
+            for (int y=0; i<20; i++)
+            {
+                for (int x=0; j<32; j++)
+                {
+                    if (result[y,x] == 1)
+                    {
+
+                    }
+                    else if (result[y, x] == 11)
+                    {
+
+                    }
+                    else if (result[y, x] == 16)
+                    {
+
+                    }
+                    else if (result[y, x] == 17)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+
+                }
+            }
 
             //add the platforms to the level based on level
             if (level == 0)

@@ -32,9 +32,9 @@ namespace EverFight
         {
 
                 Texture2D platformTexture = cm.Load<Texture2D>("black");
-                levels.Add(new Level(0, platformTexture, windowSize));
-                levels.Add(new Level(1, platformTexture, windowSize));
-                levels.Add(new Level(2, platformTexture, windowSize));
+                levels.Add(new Level(0, platformTexture, windowSize, cm));
+                levels.Add(new Level(1, platformTexture, windowSize, cm));
+                levels.Add(new Level(2, platformTexture, windowSize, cm));
 
             
         }
