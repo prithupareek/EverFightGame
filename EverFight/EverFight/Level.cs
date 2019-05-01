@@ -26,10 +26,13 @@ namespace EverFight
             windowSize = ws;
 
             //Load all the Images
-            //platform1 = cm.Load<Texture2D>()
+            platform1 = cm.Load<Texture2D>("1");
+            platform11 = cm.Load<Texture2D>("11");
+            platform16 = cm.Load<Texture2D>("16");
+            platform17 = cm.Load<Texture2D>("17");
 
             //parse the input tilemap file
-            String input = File.ReadAllText(@"Content\level1.txt");
+            String input = File.ReadAllText(@"Content\level"+level+".txt");
             int i = 0, j = 0;
 
             int[,] result = new int[20, 32];
@@ -44,25 +47,25 @@ namespace EverFight
                 i++;
             }
 
-            for (int y=0; i<20; i++)
+            for (int y=0; y<20; y++)
             {
-                for (int x=0; j<32; j++)
+                for (int x=0; x<32; x++)
                 {
                     if (result[y,x] == 1)
                     {
-
+                        platforms.Add(new Platform(new Vector2(x * 40, y * 40), new Vector2(1, 1), platform1));
                     }
                     else if (result[y, x] == 11)
                     {
-
+                        platforms.Add(new Platform(new Vector2(x * 40, y * 40), new Vector2(1, 1), platform11));
                     }
                     else if (result[y, x] == 16)
                     {
-
+                        platforms.Add(new Platform(new Vector2(x * 40, y * 40), new Vector2(1, 1), platform16));
                     }
                     else if (result[y, x] == 17)
                     {
-
+                        platforms.Add(new Platform(new Vector2(x * 40, y * 40), new Vector2(1, 1), platform17));
                     }
                     else
                     {
@@ -72,24 +75,6 @@ namespace EverFight
                 }
             }
 
-            //add the platforms to the level based on level
-            if (level == 0)
-            {
-                platforms.Add(new Platform(new Vector2(windowSize.X - 640, windowSize.Y - 150), new Vector2(16, 1), platformTexture));
-               
-            }
-            if (level == 1)
-            {
-                platforms.Add(new Platform(new Vector2(0, windowSize.Y - 150), new Vector2(5,1), platformTexture));
-                platforms.Add(new Platform(new Vector2(320, windowSize.Y - 300), new Vector2(7, 1), platformTexture));
-                platforms.Add(new Platform(new Vector2(680, windowSize.Y - 300), new Vector2(7, 1), platformTexture));
-                platforms.Add(new Platform(new Vector2(windowSize.X - 200, windowSize.Y - 150), new Vector2(5, 1), platformTexture));
-
-            }
-            if (level == 2)
-            {
-                platforms.Add(new Platform(new Vector2(0, windowSize.Y - 150), new Vector2(16, 1), platformTexture));
-            }
         }
 
         public void Draw(SpriteBatch sb)
