@@ -123,6 +123,8 @@
     <Content Include="Content\level0.txt" />
     <Content Include="Content\level1.txt" />
     <Content Include="Content\level2.txt" />
+    <Content Include="Content\level3.txt" />
+    <Content Include="Content\level4.txt" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

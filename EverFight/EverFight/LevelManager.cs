@@ -21,7 +21,7 @@ namespace EverFight
         public LevelManager(Vector2 ws, Texture2D background)
         {
             levels = new List<Level>();
-            activeLevel = 1;    //active level is set to the middle of the map
+            activeLevel = 2;    //active level is set to the middle of the map
             windowSize = ws;
             levelBackground = background;
 
@@ -31,12 +31,14 @@ namespace EverFight
         public void LoadLevel(ContentManager cm)
         {
 
-                Texture2D platformTexture = cm.Load<Texture2D>("black");
-                levels.Add(new Level(0, platformTexture, windowSize, cm));
-                levels.Add(new Level(1, platformTexture, windowSize, cm));
-                levels.Add(new Level(2, platformTexture, windowSize, cm));
+                levels.Add(new Level(0, windowSize, cm));
+                levels.Add(new Level(1, windowSize, cm));
+                levels.Add(new Level(2, windowSize, cm));
+                levels.Add(new Level(3, windowSize, cm));
+                levels.Add(new Level(4, windowSize, cm)); 
 
-            
+
+
         }
 
        
@@ -45,7 +47,7 @@ namespace EverFight
         {
 
             //draw win screen images if ative level is beyond created levels
-            if (activeLevel > 2)
+            if (activeLevel > 4)
             {
                 
             }

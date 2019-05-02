@@ -18,11 +18,10 @@ namespace EverFight
         Texture2D platform1, platform11, platform16, platform17, platformTexture;
         Vector2 windowSize;
 
-        public Level(int lev, Texture2D pTex, Vector2 ws, ContentManager cm)
+        public Level(int lev, Vector2 ws, ContentManager cm)
         {
             level = lev;
             platforms = new List<Platform>();
-            platformTexture = pTex;
             windowSize = ws;
 
             //Load all the Images

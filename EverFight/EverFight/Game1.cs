@@ -330,7 +330,7 @@ namespace EverFight
 
 
                 //platform update
-                if (levelManager.activeLevel < 3 && levelManager.activeLevel > -1)
+                if (levelManager.activeLevel < 5 && levelManager.activeLevel > -1)
                 {
                     p1.Update(levelManager.levels[levelManager.activeLevel].platforms);
                     p2.Update(levelManager.levels[levelManager.activeLevel].platforms);
@@ -358,6 +358,17 @@ namespace EverFight
                     if (p1.weapon.projectiles[i].position.Y >= windowSize.Y - bulletTexture.Height * 0.1)
                     {
                         p1.weapon.projectiles.RemoveAt(i);
+                        break;
+                    }
+
+                    foreach (Platform platform in levelManager.levels[levelManager.activeLevel].platforms)
+                    {
+                        if (p1.weapon.projectiles[i].boundingBox.Intersects(platform.boundingBox))
+                        {
+                            p1.weapon.projectiles.RemoveAt(i);
+                            break;
+                            
+                        }
                     }
                 }
                 for (int i = 0; i < p2.weapon.projectiles.Count; i++)
@@ -365,14 +376,23 @@ namespace EverFight
                     if (p2.weapon.projectiles[i].position.Y >= windowSize.Y - bulletTexture.Height * 0.1)
                     {
                         p2.weapon.projectiles.RemoveAt(i);
+                        break;
+                    }
+
+                    foreach (Platform platform in levelManager.levels[levelManager.activeLevel].platforms)
+                    {
+                        if (p2.weapon.projectiles[i].boundingBox.Intersects(platform.boundingBox))
+                        {
+                            p2.weapon.projectiles.RemoveAt(i);
+                            break;
+
+                        }
                     }
                 }
 
                 //update the bullets
                 foreach (Projectile projectile in p1.weapon.projectiles) projectile.Update();
                 foreach (Projectile projectile in p2.weapon.projectiles) projectile.Update();
-
-
 
                 //projectile - player collision detection
                 foreach (Projectile projectile in p1.weapon.projectiles)
@@ -468,7 +488,7 @@ namespace EverFight
                 }
 
                 //Game Over Scenario
-                if (p2.hasDied && levelManager.activeLevel > 2)
+                if (p2.hasDied && levelManager.activeLevel > 4)
                 {
                     mode = GameMode.p1Win;
                 }
@@ -485,6 +505,9 @@ namespace EverFight
             }
             else if (mode == GameMode.p1Win || mode == GameMode.p2Win)
             {
+                p1.pointer.Update();
+                p2.pointer.Update();
+
                 //Do something here
                 if (Keyboard.GetState().IsKeyDown(Keys.B) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A))
                 {
@@ -587,18 +610,6 @@ namespace EverFight
 
                     levelManager.DrawLevel(spriteBatch);
 
-                    if (levelManager.activeLevel > -1 && levelManager.activeLevel < 3)
-                    {
-                        // TODO: Add your drawing code here
-                        p1.Draw(spriteBatch);
-                        p2.Draw(spriteBatch);
-                    }
-
-                    foreach (Projectile projectile in p1.weapon.projectiles) projectile.Draw(spriteBatch);
-                    foreach (Projectile projectile in p2.weapon.projectiles) projectile.Draw(spriteBatch);
-
-                    
-
                     if (p1.hasDied)
                     {
                         spriteBatch.Begin();
@@ -611,6 +622,16 @@ namespace EverFight
                         spriteBatch.Draw(arrow, new Vector2(windowSize.X - 100 - arrow.Width, 100), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.FlipHorizontally, 0f);
                         spriteBatch.End();
                     }
+
+                    if (levelManager.activeLevel > -1 && levelManager.activeLevel < 5)
+                    {
+                        // TODO: Add your drawing code here
+                        p1.Draw(spriteBatch);
+                        p2.Draw(spriteBatch);
+                    }
+
+                    foreach (Projectile projectile in p1.weapon.projectiles) projectile.Draw(spriteBatch);
+                    foreach (Projectile projectile in p2.weapon.projectiles) projectile.Draw(spriteBatch);
 
                     break;
 
@@ -635,6 +656,11 @@ namespace EverFight
                     spriteBatch.Begin();
                     spriteBatch.Draw(p1Win, new Vector2(windowSize.X/2 - p1Win.Width/2, 100));
                     spriteBatch.End();
+
+                    winScreenRestartButton.Draw(spriteBatch);
+
+                    p1.pointer.Draw(spriteBatch);
+                    p2.pointer.Draw(spriteBatch);
 
                     break;
 

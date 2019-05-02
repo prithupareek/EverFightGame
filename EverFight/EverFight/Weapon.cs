@@ -36,7 +36,7 @@ namespace EverFight
 
             if (playerNum == 1)
             {
-                position = pos + new Vector2(50, 50);
+                position = pos + new Vector2(95, 50);
                 movingRight = true;
             }
             else if (playerNum == 2)

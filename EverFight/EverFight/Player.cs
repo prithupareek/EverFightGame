@@ -19,7 +19,7 @@ namespace EverFight
     {
 
         // Properties
-        public Texture2D spriteTexture;   // the image for our sprite
+        public Texture2D spriteTexture, jumpTexture, walkTexture1, walkTexture2, temp;   // the image for our sprite
         public Vector2 position;  // the position for our sprite
         int playerNumber; //stores if p1 or p2
         Vector2 windowSize;
@@ -30,6 +30,10 @@ namespace EverFight
         public Weapon weapon;
         public GamePadState pastButton;
         public Pointer pointer;
+        Boolean walking;
+
+        //Delay timer for walking animation
+        int walkingAnimationDelay;
 
 
 
@@ -40,16 +44,21 @@ namespace EverFight
             windowSize = ws;
             hasJumped = true;
             hasDied = false;
+            walking = false;
+            walkingAnimationDelay = 0;
+
+            //used for walking animation
+            temp = walkTexture1;
 
 
 
             if (playerNumber == 1)
             {
-                position = new Vector2(100, 10); //initial player position
+                position = new Vector2(125, 10); //initial player position
             }
             else if (playerNumber == 2)
             {
-                position = new Vector2(windowSize.X - 100, 10); //initial player position
+                position = new Vector2(windowSize.X - 125, 10); //initial player position
             }
 
             weapon = new Weapon(position, playerNumber);
@@ -60,7 +69,10 @@ namespace EverFight
         public void LoadContent(ContentManager cm)
         {
             //load the image for the sprite
-            spriteTexture = cm.Load<Texture2D>("rectSprite");
+            spriteTexture = cm.Load<Texture2D>("alienBiege_stand");
+            jumpTexture = cm.Load<Texture2D>("alienBiege_jump");
+            walkTexture1 = cm.Load<Texture2D>("alienBiege_walk1");
+            walkTexture2 = cm.Load<Texture2D>("alienBiege_walk2");
 
             weapon.LoadContent(cm);
         }
@@ -81,14 +93,16 @@ namespace EverFight
                 if (keys.IsKeyDown(Keys.D) || GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X>0) //right
                 {
                     weapon.movingRight = true;
-                    weapon.position.X = position.X + 50;
+                    weapon.position.X = position.X + 95;
                     position.X+= 3f;
+                    walking = true;
                 }
                 if (keys.IsKeyDown(Keys.A) || GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X < 0) //left
                 {
                     weapon.movingRight = false;
                     weapon.position.X = position.X - 25;
                     position.X-= 3f;
+                    walking = true;
                 }
                 if ((keys.IsKeyDown(Keys.B) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A)) && hasJumped == false)   //jump
                 {
@@ -98,6 +112,12 @@ namespace EverFight
                     //touchingPlatTop = false;
                 }
 
+                if (keys.IsKeyUp(Keys.A) && keys.IsKeyUp(Keys.D))
+                {
+                    walking = false;
+                    walkingAnimationDelay = 0;
+                }
+
 
             }
             else if (playerNumber == 2)
@@ -105,14 +125,16 @@ namespace EverFight
                 if (keys.IsKeyDown(Keys.Right) || GamePad.GetState(PlayerIndex.Two).ThumbSticks.Left.X > 0) //right
                 {
                     weapon.movingRight = true;
-                    weapon.position.X = position.X + 50;
+                    weapon.position.X = position.X + 95;
                     position.X+= 3f;
+                    walking = true;
                 }
                 if (keys.IsKeyDown(Keys.Left) || GamePad.GetState(PlayerIndex.Two).ThumbSticks.Left.X < 0) //left
                 {
                     weapon.movingRight = false;
                     weapon.position.X = position.X - 25;
                     position.X-= 3f;
+                    walking = true;
                 }
                 if ((keys.IsKeyDown(Keys.L) || GamePad.GetState(PlayerIndex.Two).IsButtonDown(Buttons.A)) && hasJumped == false)   //jump
                 {
@@ -120,6 +142,12 @@ namespace EverFight
                     velocity.Y = -10f;
                     hasJumped = true;
                     //touchingPlatTop = false;
+                }
+
+                if (keys.IsKeyUp(Keys.Left) && keys.IsKeyUp(Keys.Right))
+                {
+                    walking = false;
+                    walkingAnimationDelay = 0;
                 }
             }
 
@@ -176,6 +204,9 @@ namespace EverFight
             {
                 position.Y = windowSize.Y - spriteTexture.Height;
                 hasJumped = false;
+
+                //die if hit the ground
+                Respawn();
             }
 
             if (hasJumped == false)
@@ -193,8 +224,8 @@ namespace EverFight
 
             if (playerNumber == 1)
             {
-                position = new Vector2(100, -200);
-                weapon.position = position + new Vector2(50, 50);
+                position = new Vector2(125, -200);
+                weapon.position = position + new Vector2(95, 50);
                 weapon.movingRight = true;
                 hasDied = true;
                 hasJumped = false;
@@ -202,7 +233,7 @@ namespace EverFight
             }
             else if (playerNumber == 2)
             {
-                position = new Vector2(windowSize.X - 100, -200);
+                position = new Vector2(windowSize.X - 125, -200);
                 weapon.position = position + new Vector2(-25, 50);
                 weapon.movingRight = false;
                 hasDied = true;
@@ -216,10 +247,48 @@ namespace EverFight
         public void Draw(SpriteBatch sb)
         {
 
+            //used for flipping the image based on the direction of motion
+            SpriteEffects flip = SpriteEffects.None;
+            if (weapon.movingRight == false)
+            {
+                flip = SpriteEffects.FlipHorizontally;
+            }
+            else
+            {
+                flip = SpriteEffects.None;
+            }
 
-            sb.Begin();
-            sb.Draw(spriteTexture, position, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-            sb.End();
+            if (hasJumped == true)
+            {
+                sb.Begin();
+                sb.Draw(jumpTexture, position, null, Color.White, 0f, Vector2.Zero, 1f, flip, 0f);
+                sb.End();
+            }
+            else if (walking && !hasJumped)
+            {
+
+                if (walkingAnimationDelay % 5 == 0)
+                {
+                    temp = walkTexture1;
+                }
+                if (walkingAnimationDelay % 10 == 0)
+                {
+                    temp = walkTexture2;
+                }
+
+                walkingAnimationDelay++;
+
+                sb.Begin();
+                sb.Draw(temp, position, null, Color.White, 0f, Vector2.Zero, 1f, flip, 0f);
+                sb.End();
+            }
+            else
+            {
+                sb.Begin();
+                sb.Draw(spriteTexture, position, null, Color.White, 0f, Vector2.Zero, 1f, flip, 0f);
+                sb.End();
+            }
+            
 
             weapon.Draw(sb);
 
