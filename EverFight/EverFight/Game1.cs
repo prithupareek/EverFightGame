@@ -365,7 +365,7 @@ namespace EverFight
                                 p1.hasDied = false;
                                 p2.hasDied = false;
                                 p1.position = new Vector2(100, 10);
-                                p2.position = new Vector2(windowSize.X - 100, 10);
+                                p2.position = new Vector2(windowSize.X - 125-72, 10);
                                 MediaPlayer.Stop();
                                 musicState = MusicState.NOTPLAYING;
 
@@ -393,7 +393,7 @@ namespace EverFight
                                 p1.hasDied = false;
                                 p2.hasDied = false;
                                 p1.position = new Vector2(100, 10);
-                                p2.position = new Vector2(windowSize.X - 100, 10);
+                                p2.position = new Vector2(windowSize.X - 125-72, 10);
                                 MediaPlayer.Stop();
                                 musicState = MusicState.NOTPLAYING;
                             }
@@ -610,7 +610,7 @@ namespace EverFight
                             p1.hasDied = false;
                             p2.hasDied = false;
                             p1.position = new Vector2(100, 10);
-                            p2.position = new Vector2(windowSize.X - 100, 10);
+                            p2.position = new Vector2(windowSize.X - 125 - 72, 10);
                             MediaPlayer.Stop();
                             musicState = MusicState.NOTPLAYING;
 
@@ -635,7 +635,7 @@ namespace EverFight
                             p1.hasDied = false;
                             p2.hasDied = false;
                             p1.position = new Vector2(100, 10);
-                            p2.position = new Vector2(windowSize.X - 100, 10);
+                            p2.position = new Vector2(windowSize.X - 125 - 72, 10);
                             MediaPlayer.Stop();
                             musicState = MusicState.NOTPLAYING;
                         }
