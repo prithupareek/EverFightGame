@@ -16,14 +16,21 @@ namespace EverFight
         public Vector2 position;
         public Game1.ButtonType buttonType;
         public Texture2D buttonTexture;
-        Texture2D activeButtonTexture;
         public BoundingBox boundingBox;
+        public int playerNumber;
 
         public Button(Vector2 pos, Game1.ButtonType type)
         {
             position = pos;
             buttonType = type;
 
+        }
+
+        public Button(Vector2 pos, Game1.ButtonType type, int playerNum)
+        {
+            position = pos;
+            buttonType = type;
+            playerNumber = playerNum;
         }
 
         public void LoadContent(ContentManager cm)

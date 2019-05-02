@@ -52,40 +52,40 @@ namespace EverFight
             {
                 if (keys.IsKeyDown(Keys.D) || GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X > 0) //right
                 {
-                    position.X += 3f;
+                    position.X += 3.5f;
                 }
                 if (keys.IsKeyDown(Keys.A) || GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.X < 0) //left
                 {
 
-                    position.X -= 3f;
+                    position.X -= 3.5f;
                 }
                 if (keys.IsKeyDown(Keys.W) || GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y > 0)   //up
                 {
-                    position.Y -= 3f;
+                    position.Y -= 3.5f;
                 }
                 if (keys.IsKeyDown(Keys.S) || GamePad.GetState(PlayerIndex.One).ThumbSticks.Left.Y < 0)   //down
                 {
-                    position.Y += 3f;
+                    position.Y += 3.5f;
                 }
             }
             else if (playerNum == 2)
             {
                 if (keys.IsKeyDown(Keys.Right) || GamePad.GetState(PlayerIndex.Two).ThumbSticks.Left.X > 0) //right
                 {
-                    position.X += 3f;
+                    position.X += 3.5f;
                 }
                 if (keys.IsKeyDown(Keys.Left) || GamePad.GetState(PlayerIndex.Two).ThumbSticks.Left.X < 0) //left
                 {
 
-                    position.X -= 3f;
+                    position.X -= 3.5f;
                 }
                 if (keys.IsKeyDown(Keys.Up) || GamePad.GetState(PlayerIndex.Two).ThumbSticks.Left.Y > 0)   //up
                 {
-                    position.Y -= 3f;
+                    position.Y -= 3.5f;
                 }
                 if (keys.IsKeyDown(Keys.Down) || GamePad.GetState(PlayerIndex.Two).ThumbSticks.Left.Y < 0)   //down
                 {
-                    position.Y += 3f;
+                    position.Y += 3.5f;
                 }
 
             }

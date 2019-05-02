@@ -31,6 +31,7 @@ namespace EverFight
         public GamePadState pastButton;
         public Pointer pointer;
         Boolean walking;
+        public string playerColor;
 
         //Delay timer for walking animation
         int walkingAnimationDelay;
@@ -55,10 +56,12 @@ namespace EverFight
             if (playerNumber == 1)
             {
                 position = new Vector2(125, 10); //initial player position
+                playerColor = "Biege";
             }
             else if (playerNumber == 2)
             {
                 position = new Vector2(windowSize.X - 125, 10); //initial player position
+                playerColor = "Blue";
             }
 
             weapon = new Weapon(position, playerNumber);
@@ -69,10 +72,10 @@ namespace EverFight
         public void LoadContent(ContentManager cm)
         {
             //load the image for the sprite
-            spriteTexture = cm.Load<Texture2D>("alienBiege_stand");
-            jumpTexture = cm.Load<Texture2D>("alienBiege_jump");
-            walkTexture1 = cm.Load<Texture2D>("alienBiege_walk1");
-            walkTexture2 = cm.Load<Texture2D>("alienBiege_walk2");
+            spriteTexture = cm.Load<Texture2D>("alien"+playerColor+"_stand");
+            jumpTexture = cm.Load<Texture2D>("alien" + playerColor + "_jump");
+            walkTexture1 = cm.Load<Texture2D>("alien" + playerColor + "_walk1");
+            walkTexture2 = cm.Load<Texture2D>("alien" + playerColor + "_walk2");
 
             weapon.LoadContent(cm);
         }

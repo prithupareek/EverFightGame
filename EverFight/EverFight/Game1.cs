@@ -67,6 +67,9 @@ namespace EverFight
 
         MusicState musicState;
 
+        //list of charecter colors
+        List<string> playerColors;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -152,8 +155,13 @@ namespace EverFight
 
             menuButtons = new List<Button>();
             menuButtons.Add(new Button(new Vector2 (windowSize.X/2, 300), ButtonType.START));
-
-            foreach(Button button in menuButtons) {
+            //arrows for changing charecter skins
+            menuButtons.Add(new Button(new Vector2(100, 600), ButtonType.LEFT_ARROW, 1));
+            menuButtons.Add(new Button(new Vector2(300, 600), ButtonType.RIGHT_ARROW, 1));
+            menuButtons.Add(new Button(new Vector2(windowSize.X - 300, 600), ButtonType.LEFT_ARROW, 2));
+            menuButtons.Add(new Button(new Vector2(windowSize.X - 100, 600), ButtonType.RIGHT_ARROW, 2));
+        
+            foreach (Button button in menuButtons) {
                 button.LoadContent(Content);
             }
 
@@ -174,7 +182,14 @@ namespace EverFight
             gameplayBackgroundMusic = Content.Load<Song>("gameplay-background-song");
             musicState = MusicState.NOTPLAYING;
 
-
+            //player colors list
+            playerColors = new List<string>() {
+                "Biege",
+                "Blue",
+                "Green",
+                "Pink",
+                "Yellow"
+            };
         }
 
         /// <summary>
@@ -214,6 +229,7 @@ namespace EverFight
                 {
                     MediaPlayer.Play(menuBackgroundMusic);
                     musicState = MusicState.PLAYING;
+                    MediaPlayer.IsRepeating = true;
                 }
 
                 p1.pointer.Update();
@@ -224,23 +240,7 @@ namespace EverFight
                     if (p1.pointer.boundingBox.Intersects(button.boundingBox))
                     {
 
-                            if (Keyboard.GetState().IsKeyDown(Keys.B) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A))
-                            {
-                                if (button.buttonType == ButtonType.START)
-                                {
-                                    mode = GameMode.playing;
-                                    MediaPlayer.Stop();
-                                    musicState = MusicState.NOTPLAYING;
-
-                                }
-                            }
-                        
-                    }
-                    if (p2.pointer.boundingBox.Intersects(button.boundingBox))
-                    {
-                        
-
-                        if (Keyboard.GetState().IsKeyDown(Keys.L) || GamePad.GetState(PlayerIndex.Two).IsButtonDown(Buttons.A))
+                        if ((Keyboard.GetState().IsKeyDown(Keys.B) && pastKey.IsKeyUp(Keys.B))|| (GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A) && p1.pastButton.IsButtonUp(Buttons.A)))
                         {
                             if (button.buttonType == ButtonType.START)
                             {
@@ -249,9 +249,81 @@ namespace EverFight
                                 musicState = MusicState.NOTPLAYING;
 
                             }
+                            if (button.buttonType == ButtonType.RIGHT_ARROW && button.playerNumber == 1)
+                            {
+                                if (p1.playerColor == playerColors[4])
+                                {
+                                    p1.playerColor = playerColors[0];
+                                }
+                                else
+                                {
+                                    p1.playerColor = playerColors[playerColors.IndexOf(p1.playerColor) + 1];
+                                }
+
+                                p1.LoadContent(Content);
+                            }
+                            if (button.buttonType == ButtonType.LEFT_ARROW && button.playerNumber == 1)
+                            {
+                                if (p1.playerColor == playerColors[0])
+                                {
+                                    p1.playerColor = playerColors[4];
+                                }
+                                else
+                                {
+                                    p1.playerColor = playerColors[playerColors.IndexOf(p1.playerColor) - 1];
+                                }
+
+                                p1.LoadContent(Content);
+                            }
+                        }
+                        
+                    }
+                    if (p2.pointer.boundingBox.Intersects(button.boundingBox))
+                    {
+                        
+
+                        if ((Keyboard.GetState().IsKeyDown(Keys.L) && pastKey.IsKeyUp(Keys.L))|| (GamePad.GetState(PlayerIndex.Two).IsButtonDown(Buttons.A) && p2.pastButton.IsButtonUp(Buttons.A)))
+                        {
+                            if (button.buttonType == ButtonType.START)
+                            {
+                                mode = GameMode.playing;
+                                MediaPlayer.Stop();
+                                musicState = MusicState.NOTPLAYING;
+
+                            }
+                            if (button.buttonType == ButtonType.RIGHT_ARROW && button.playerNumber == 2)
+                            {
+                                if (p2.playerColor == playerColors[4])
+                                {
+                                    p2.playerColor = playerColors[0];
+                                }
+                                else
+                                {
+                                    p2.playerColor = playerColors[playerColors.IndexOf(p2.playerColor) + 1];
+                                }
+
+                                p2.LoadContent(Content);
+                            }
+                            if (button.buttonType == ButtonType.LEFT_ARROW && button.playerNumber == 2)
+                            {
+                                if (p2.playerColor == playerColors[0])
+                                {
+                                    p2.playerColor = playerColors[4];
+                                }
+                                else
+                                {
+                                    p2.playerColor = playerColors[playerColors.IndexOf(p2.playerColor) - 1];
+                                }
+
+                                p2.LoadContent(Content);
+                            }
                         }
                     }
                 }
+
+                pastKey = Keyboard.GetState();
+                p1.pastButton = GamePad.GetState(PlayerIndex.One);
+                p2.pastButton = GamePad.GetState(PlayerIndex.Two);
             }
 
             else if (mode == GameMode.paused)
@@ -326,6 +398,7 @@ namespace EverFight
                 {
                     MediaPlayer.Play(gameplayBackgroundMusic);
                     musicState = MusicState.PLAYING;
+                    MediaPlayer.IsRepeating = true;
                 }
 
 
@@ -593,6 +666,8 @@ namespace EverFight
                     GraphicsDevice.Clear(Color.Crimson);
                     spriteBatch.Begin();
                     spriteBatch.Draw(backgroundImage, new Vector2(0, 0));
+                    spriteBatch.Draw(p1.spriteTexture, new Vector2(160, 590));
+                    spriteBatch.Draw(p2.spriteTexture, new Vector2(windowSize.X - 160 - p2.spriteTexture.Width, 590));
                     spriteBatch.End();
 
                     foreach (Button button in menuButtons)
