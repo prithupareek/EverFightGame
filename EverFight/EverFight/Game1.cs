@@ -38,7 +38,7 @@ namespace EverFight
 
         enum GameMode
         {
-            splashScreen, menu, playing, paused, p1Win, p2Win
+            splashScreen, menu, playing, paused, p1Win, p2Win, instructions
         }
 
         GameMode mode;
@@ -56,6 +56,7 @@ namespace EverFight
         Texture2D p2Win;
         Texture2D splashImage;
         Texture2D backgroundImage;
+        Texture2D instructionsImage;
 
         Song menuBackgroundMusic;
         Song gameplayBackgroundMusic;
@@ -140,6 +141,9 @@ namespace EverFight
             //background image
             backgroundImage = Content.Load<Texture2D>("cave-background");
 
+            //instructions image
+            instructionsImage = Content.Load<Texture2D>("instructions");
+
             levelManager = new LevelManager(windowSize, backgroundImage);
             levelManager.LoadLevel(Content);
 
@@ -217,6 +221,13 @@ namespace EverFight
                     splashDelayCounter++;
                 }
                 else
+                {
+                    mode = GameMode.instructions;
+                }
+            }
+            else if (mode == GameMode.instructions)
+            {
+                if (Keyboard.GetState().IsKeyDown(Keys.Space) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.A) || GamePad.GetState(PlayerIndex.Two).IsButtonDown(Buttons.A))
                 {
                     mode = GameMode.menu;
                 }
@@ -410,12 +421,12 @@ namespace EverFight
                 }
 
                 //on keypress for bullets
-                if ((Keyboard.GetState().IsKeyDown(Keys.V) && pastKey.IsKeyUp(Keys.V)) || (GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.Y) && p1.pastButton.IsButtonUp(Buttons.Y)))   //p1
+                if ((Keyboard.GetState().IsKeyDown(Keys.V) && pastKey.IsKeyUp(Keys.V)) || (GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.RightTrigger) && p1.pastButton.IsButtonUp(Buttons.RightTrigger)))   //p1
                 {
 
                     p1.weapon.projectiles.Add(new Projectile(p1.weapon.position, 1, p1.weapon.rotation, windowSize, bulletTexture, p1.spriteTexture, p1.weapon.movingRight));
                 }
-                if (Keyboard.GetState().IsKeyDown(Keys.K) && pastKey.IsKeyUp(Keys.K) || (GamePad.GetState(PlayerIndex.Two).IsButtonDown(Buttons.Y) && p2.pastButton.IsButtonUp(Buttons.Y)))   //p2
+                if (Keyboard.GetState().IsKeyDown(Keys.K) && pastKey.IsKeyUp(Keys.K) || (GamePad.GetState(PlayerIndex.Two).IsButtonDown(Buttons.RightTrigger) && p2.pastButton.IsButtonUp(Buttons.RightTrigger)))   //p2
                 {
                     p2.weapon.projectiles.Add(new Projectile(p2.weapon.position, 2, p2.weapon.rotation, windowSize, bulletTexture, p2.spriteTexture, p2.weapon.movingRight));
                 }
@@ -659,6 +670,13 @@ namespace EverFight
                     GraphicsDevice.Clear(Color.Black);
                     spriteBatch.Begin();
                     spriteBatch.Draw(splashImage, new Vector2(windowSize.X / 2 - splashImage.Width / 2, windowSize.Y / 2 - splashImage.Height / 2));
+                    spriteBatch.End();
+                    break;
+
+                case GameMode.instructions:
+                    GraphicsDevice.Clear(Color.Black);
+                    spriteBatch.Begin();
+                    spriteBatch.Draw(instructionsImage, new Vector2(0,0));
                     spriteBatch.End();
                     break;
 

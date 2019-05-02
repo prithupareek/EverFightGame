@@ -60,7 +60,7 @@ namespace EverFight
             }
             else if (playerNumber == 2)
             {
-                position = new Vector2(windowSize.X - 125, 10); //initial player position
+                position = new Vector2(windowSize.X - 125 - 72, 10); //initial player position
                 playerColor = "Blue";
             }
 
@@ -236,7 +236,7 @@ namespace EverFight
             }
             else if (playerNumber == 2)
             {
-                position = new Vector2(windowSize.X - 125, -200);
+                position = new Vector2(windowSize.X - 125 - spriteTexture.Width, -200);
                 weapon.position = position + new Vector2(-25, 50);
                 weapon.movingRight = false;
                 hasDied = true;
