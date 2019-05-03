@@ -421,12 +421,12 @@ namespace EverFight
                 }
 
                 //on keypress for bullets
-                if ((Keyboard.GetState().IsKeyDown(Keys.V) && pastKey.IsKeyUp(Keys.V)) || (GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.RightTrigger) && p1.pastButton.IsButtonUp(Buttons.RightTrigger)))   //p1
+                if (p1.isRespawning == false && (Keyboard.GetState().IsKeyDown(Keys.V) && pastKey.IsKeyUp(Keys.V)) || (GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.RightTrigger) && p1.pastButton.IsButtonUp(Buttons.RightTrigger)))   //p1
                 {
 
                     p1.weapon.projectiles.Add(new Projectile(p1.weapon.position, 1, p1.weapon.rotation, windowSize, bulletTexture, p1.spriteTexture, p1.weapon.movingRight));
                 }
-                if (Keyboard.GetState().IsKeyDown(Keys.K) && pastKey.IsKeyUp(Keys.K) || (GamePad.GetState(PlayerIndex.Two).IsButtonDown(Buttons.RightTrigger) && p2.pastButton.IsButtonUp(Buttons.RightTrigger)))   //p2
+                if (p2.isRespawning == false && Keyboard.GetState().IsKeyDown(Keys.K) && pastKey.IsKeyUp(Keys.K) || (GamePad.GetState(PlayerIndex.Two).IsButtonDown(Buttons.RightTrigger) && p2.pastButton.IsButtonUp(Buttons.RightTrigger)))   //p2
                 {
                     p2.weapon.projectiles.Add(new Projectile(p2.weapon.position, 2, p2.weapon.rotation, windowSize, bulletTexture, p2.spriteTexture, p2.weapon.movingRight));
                 }
@@ -513,11 +513,11 @@ namespace EverFight
 
 
                 //respawn timer
-                if (p2.position.Y < 0 && p2.hasDied)
+                if (p2.position.Y < 0 && p2.isRespawning)
                 {
                     p2DelayCounter++;
                 }
-                if (p1.position.Y < 0 && p1.hasDied)
+                if (p1.position.Y < 0 && p1.isRespawning)
                 {
                     p1DelayCounter++;
                 }
@@ -527,12 +527,14 @@ namespace EverFight
                     p1DelayCounter = 0;
                     p1.velocity.Y = 0;
                     p1.hasJumped = true;
+                    p1.isRespawning = false;
                 }
                 if (p2DelayCounter == 200)
                 {
                     p2DelayCounter = 0;
                     p2.velocity.Y = 0;
                     p2.hasJumped = true;
+                    p2.isRespawning = false;
                 }
 
                 //player reaches endzone of current level
@@ -766,6 +768,11 @@ namespace EverFight
                     spriteBatch.Begin();
                     spriteBatch.Draw(p2Win, new Vector2(windowSize.X / 2 - p1Win.Width / 2, 100));
                     spriteBatch.End();
+
+                    winScreenRestartButton.Draw(spriteBatch);
+
+                    p1.pointer.Draw(spriteBatch);
+                    p2.pointer.Draw(spriteBatch);
 
                     break;
 

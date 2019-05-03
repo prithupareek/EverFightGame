@@ -32,6 +32,7 @@ namespace EverFight
         public Pointer pointer;
         Boolean walking;
         public string playerColor;
+        public Boolean isRespawning;
 
         //Delay timer for walking animation
         int walkingAnimationDelay;
@@ -47,6 +48,7 @@ namespace EverFight
             hasDied = false;
             walking = false;
             walkingAnimationDelay = 0;
+            isRespawning = false;
 
             //used for walking animation
             temp = walkTexture1;
@@ -232,6 +234,7 @@ namespace EverFight
                 weapon.movingRight = true;
                 hasDied = true;
                 hasJumped = false;
+                isRespawning = true;
 
             }
             else if (playerNumber == 2)
@@ -241,6 +244,7 @@ namespace EverFight
                 weapon.movingRight = false;
                 hasDied = true;
                 hasJumped = false;
+                isRespawning = true;
             }
             
 
